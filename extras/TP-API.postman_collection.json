@@ -199,7 +199,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"title\": \"Pinocho\",\n    \"author\": \"someone\",\n    \"id\": 3\n}"
+					"raw": "{\n    \"title\": \"Pinocho\",\n    \"author\": \"someone\",\n    \"id\": 2\n}"
 				},
 				"url": {
 					"raw": "localhost:5555/books/",
@@ -289,7 +289,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"Bid\": 2,\n\t\"Pid\": 7\n}"
+					"raw": "{\n\t\"Bid\": 3,\n\t\"Pid\": 7\n}"
 				},
 				"url": {
 					"raw": "localhost:5555/loans/lent",
@@ -319,7 +319,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"Bid\": 2,\n\t\"Pid\": 7\n}"
+					"raw": "{\n\t\"Bid\": 1,\n\t\"Pid\": 7\n}"
 				},
 				"url": {
 					"raw": "localhost:5555/loans/return",
