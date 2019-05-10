@@ -1,7 +1,6 @@
 var express= require('express');
 var app = express();
 var bodyParser= require('body-parser');
-
 app.use(bodyParser.json());
 
 const DIA_EN_MILISEGUNDOS = 1000*60*60*24;
@@ -9,7 +8,6 @@ const DIA_EN_MILISEGUNDOS = 1000*60*60*24;
 var libros = new Array();
 var socios = new Array();
 var prestamos = new Array();
-
 
 function Libro(titulo,cantidad,id){
     this.id=id;
@@ -120,16 +118,6 @@ function deleteBook(id){
     }
 }
 
-function deleteMember(id){
-    for (let i = 0; i < socios.length; i++) {
-        if(id == socios[i].id){
-            socios.splice(i,1);
-            return 1;
-        }
-    }
-    return 0;
-}
-
 function getPrestamos(idSocio){
     var prest=new Array();
     for (let i = 0; i < prestamos.length; i++) {
@@ -153,19 +141,10 @@ socios.push(new Socio("B",2));
 prestamos.push(new Prestamo(1,1,10,20));
 prestamos.push(new Prestamo(2,2,10,20));
 
-//#region GET
-//GET todos los libros
-app.get('/libros',function(req,res){
-    res.status(200).json(libros);
-})
-
-//GET todos los socios
 app.get('/socios',function(req,res){
     res.status(200).json(socios);
 })
 
-
-//GET informacion sobre socio
 app.get('/socios/:idSocio',function(req,res){
     var socio=findMember(req.params.idSocio);
     if(socio!=0){
@@ -176,8 +155,6 @@ app.get('/socios/:idSocio',function(req,res){
     }
 })
 
-
-//GET prestamos hechos por un socio
 app.get('/socios/:idSocio/prestamos',function(req,res){
     if(findMember(req.params.idSocio)){
         var prest=getPrestamos(req.params.idSocio);
@@ -193,7 +170,6 @@ app.get('/socios/:idSocio/prestamos',function(req,res){
     }
 })
 
-//Obtener todos los Prestamos
 app.get('/prestamos',function(req,res){
     if(prestamos!=null)
         res.status(200).json(prestamos);
@@ -201,7 +177,6 @@ app.get('/prestamos',function(req,res){
         res.status(204).send("No hay Prestamos Registrados");
 })
 
-//GET libros disponibles
 app.get('/libros/:idLibro',function(req,res){
     var book=findBook(req.params.idLibro);
     if(book!=0){
@@ -212,11 +187,6 @@ app.get('/libros/:idLibro',function(req,res){
     }
 })
 
-//#endregion
-
-
-
-//#region POST
 app.post('/socios',function(req,res){
     socios.push(new Socio(req.body.nombre,req.body.id));   
     res.status(201).json(req.body);
@@ -228,7 +198,6 @@ app.post('/libros',function(req,res){
     res.status(201).json(req.body);
 })
 
-//Realizar un Prestamo
 app.post('/prestamos',function(req,res){
     if(adeuda(req.body.idSocio)){
         res.status(400).send("El socio adeuda libros");
@@ -244,9 +213,6 @@ app.post('/prestamos',function(req,res){
     }
 })
 
-//#endregion
-
-//Eliminar un Libro
 app.delete('/libros/:idlibro',function(req,res){
     var resultado=deleteBook(req.params.idLibro);
     if(resultado){
@@ -272,7 +238,6 @@ function returnBook(idSocio,idLibro){
     return 0;
 }
 
-//Devolver Libro
 app.delete('/prestamos/:idSocio/:idLibro',function(req,res){
     if(returnBook(req.params.idSocio,req.params.idLibro)){
         res.status(200).send("Libro devuelto");
@@ -283,8 +248,6 @@ app.delete('/prestamos/:idSocio/:idLibro',function(req,res){
     }
 })
 
-
-//Actualizar Cantidad de ejemplares de un libro
 app.put('/libros/:idLibro',function(req,res){
     var resultado=updateBook(req.params.idLibro,req.body.cantidad);
     if(resultado==1){
@@ -297,13 +260,6 @@ app.put('/libros/:idLibro',function(req,res){
         res.status(400).json("Libro no encontrado");
     }
 })
-
-
-
-
-
-
-
 
 var server = app.listen(8080, '127.0.0.1', function () {
     var host = server.address().address
