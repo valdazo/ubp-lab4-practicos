@@ -4,8 +4,6 @@ var bodyParser= require('body-parser');
 
 app.use(bodyParser.json());
 
-
-//fechavencimiento=Date.now()+DIASENMILISEGUNDOS*dias;
 const DIA_EN_MILISEGUNDOS = 1000*60*60*24;
 
 var libros = new Array();
@@ -160,16 +158,6 @@ prestamos.push(new Prestamo(2,2,10,20));
 app.get('/libros',function(req,res){
     res.status(200).json(libros);
 })
-
-
-/*
-app.get('/libros/:idLibro',function(req,res){
-    var book=findBook(req.params.idLibro);
-    if(book!=0){}
-    res.status(200).json(findBook(req.params.idLibro));
-})
-*/
-
 
 //GET todos los socios
 app.get('/socios',function(req,res){
