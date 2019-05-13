@@ -53,7 +53,7 @@ app.post('/libros', function (req, res) {
     var idLibro = getNewId();
     var nombreLibro = req.body.titulo;
     var cantidadLibro = req.body.cantidad;
-    if(Number.isInteger(cantidadLibro) == true && cantidadLibro > 0) {
+    if(Number.isInteger(cantidadLibro) && cantidadLibro > 0) {
         if(nombreLibro != undefined) {
             libros.push(new Libro(idLibro, nombreLibro, cantidadLibro));
             res.status(201).json("idLibro: " + idLibro);
@@ -70,17 +70,17 @@ app.post('/libros', function (req, res) {
 function libroPrestado(idLibro) {
     for (var librosPrestamos of prestamos) {
         if(librosPrestamos.idLibro == idLibro) {
-            return 1;
+            return true;
         }
     }
-    return -1;
+    return false;
 }
 
 //RQ1.2: Eliminar libro de la libreria
 app.delete('/libros/:libro', function (req, res) {
     var eliminarLibro = encontrarIndice(libros, req.params.libro);
     if(eliminarLibro != -1) {
-        if(libroPrestado(req.params.libro) == -1) {
+        if(!libroPrestado(req.params.libro)) {
             libros.splice(eliminarLibro, 1);
             res.status(204).send();
         }
@@ -97,9 +97,10 @@ app.delete('/libros/:libro', function (req, res) {
 app.put('/libros/:libro', function (req, res) {
     var libroAModificar = encontrarIndice(libros, req.params.libro);
     var cantidadNueva = req.body.cantidad;
+    
     if(libroAModificar != -1) {
-        if(Number.isInteger(cantidadNueva) == true && cantidadNueva > 0) {
-            if(cantidadNueva > libros[libroAModificar].disponibles(prestamos)) {
+        if(Number.isInteger(cantidadNueva) && cantidadNueva > 0) {
+            if(cantidadNueva > (libros[libroAModificar].cantidad - libros[libroAModificar].disponibles(prestamos))) {
                 libros[libroAModificar].cantidad = cantidadNueva;
                 res.status(204).send();
             }
@@ -179,17 +180,16 @@ app.get('/socios/:socio/prestamos', function (req, res) {
 })
 
 function comprobarLibrosVencidos(prestamosSocio){
-    var f = new Date();
-    fechaActual = f.getTime();
+    var fechaActual = Date.now();
 
     if(prestamosSocio != null){
         for(var p of prestamosSocio){
-            if(fechaActual > p.fechaVencimiento){
-                return false;
+            if(fechaActual < p.fechaVencimiento){
+                return true;
             }
         }
     }
-    return true;
+    return false;
 }
 
 //RQ3.1: Registrar un prestamo de un libro a un socio
@@ -205,7 +205,7 @@ app.post('/prestamos', function (req, res) {
                 var prestamosSocio = librosPrestados(idSocioPrestamo);
                 var librosVencidos = comprobarLibrosVencidos(prestamosSocio);
             
-                if(librosVencidos == true){
+                if(!librosVencidos){
                     var idPrestamo = getNewId();
                     var vencimiento = req.body.dias;
                     prestamos.push(new Prestamo(idPrestamo, req.body.idSocio, req.body.idLibro, vencimiento));
@@ -231,7 +231,6 @@ app.post('/prestamos', function (req, res) {
 //RQ3.2: Un socio puede devolver un libro prestado
 app.delete('/prestamos/:prestamo', function (req, res) {
     var eliminarPrestamo = encontrarIndice(prestamos, req.params.prestamo);
-    console.log(eliminarPrestamo);
     if(eliminarPrestamo != -1) {
         prestamos.splice(eliminarPrestamo, 1);
         res.status(204).send();
