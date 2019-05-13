@@ -14,7 +14,7 @@ function Libro(titulo,cantidad,id){
     this.titulo=titulo;
     this.cantidad=cantidad;
     this.disponibles=function(){
-        var count=0;
+        let count=0;
         for (const prest of prestamos) {
             if (prest.idLibro==this.id){
                 count++;
@@ -37,7 +37,7 @@ function Prestamo(id,idSocio,idLibro,dias){
 }
 
 function librosPrestados(idLibro){
-    var cont=0;
+    let cont=0;
     for (let i = 0; i < prestamos.length; i++) {
         if(prestamos[i].idLibro==idLibro){
             cont++;
@@ -71,7 +71,7 @@ function findID(id,coleccion){
 }
 
 function adeuda(idSocio){
-    var fecha_prest=new Array();
+    let fecha_prest=new Array();
     for (let i = 0; i < prestamos.length; i++) {
         if(idSocio==prestamos[i].idSocio){
             fecha_prest.push(new Date(prestamos[i].fechavencimiento));
@@ -110,7 +110,7 @@ function deleteBook(id){
 }
 
 function getPrestamos(idSocio){
-    var prest=new Array();
+    let prest=new Array();
     for (let i = 0; i < prestamos.length; i++) {
         if(idSocio==prestamos[i].idSocio){
             prest.push({"idLibro":prestamos[i].idLibro ,"Fecha Vencimiento":new Date(prestamos[i].fechavencimiento)});
@@ -137,7 +137,7 @@ app.get('/socios',function(req,res){
 })
 
 app.get('/socios/:idSocio',function(req,res){
-    var socio=findID(req.params.idSocio,socios);
+    let socio=findID(req.params.idSocio,socios);
     if(socio!=0){
         res.status(200).json(socio);
     }
@@ -148,7 +148,7 @@ app.get('/socios/:idSocio',function(req,res){
 
 app.get('/socios/:idSocio/prestamos',function(req,res){
     if(findID(req.params.idSocio,socios)){
-        var prest=getPrestamos(req.params.idSocio);
+        let prest=getPrestamos(req.params.idSocio);
         if(prest.length==0){
             res.status(200).send("No hay Prestamos Realizados por el Socio");
         }
@@ -169,7 +169,7 @@ app.get('/prestamos',function(req,res){
 })
 
 app.get('/libros/:idLibro',function(req,res){
-    var book=findID(req.params.idLibro,libros);
+    let book=findID(req.params.idLibro,libros);
     if(book!=0){
         res.status(200).json({"idLibro":parseInt(req.params.idLibro),"disponibles":book.disponibles()});
     }
@@ -210,7 +210,7 @@ app.post('/prestamos',function(req,res){
 })
 
 app.delete('/libros/:idlibro',function(req,res){
-    var resultado=deleteBook(req.params.idLibro);
+    let resultado=deleteBook(req.params.idLibro);
     if(resultado){
         res.status(200).send("Libro Eliminado");
     }
@@ -245,7 +245,7 @@ app.delete('/prestamos/:idSocio/:idLibro',function(req,res){
 })
 
 app.put('/libros/:idLibro',function(req,res){
-    var resultado=updateBook(req.params.idLibro,req.body.cantidad);
+    let resultado=updateBook(req.params.idLibro,req.body.cantidad);
     if(resultado==1){
         res.status(200).json(findID(req.params.idLibro,libros));
     }
