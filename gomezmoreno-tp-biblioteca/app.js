@@ -82,7 +82,7 @@ app.delete('/libros/:libro', function (req, res) {
     if(eliminarLibro != -1) {
         if(libroPrestado(req.params.libro) == -1) {
             libros.splice(eliminarLibro, 1);
-            res.status(204).json("idLibro: " + eliminarLibro);
+            res.status(204).send();
         }
         else {
             res.status(400).json("El libro no puede ser eliminado porque está prestado");
@@ -101,7 +101,7 @@ app.put('/libros/:libro', function (req, res) {
         if(Number.isInteger(cantidadNueva) == true && cantidadNueva > 0) {
             if(cantidadNueva > libros[libroAModificar].disponibles(prestamos)) {
                 libros[libroAModificar].cantidad = cantidadNueva;
-                res.status(204).json("idLibro: " + libroAModificar);
+                res.status(204).send();
             }
             else {
                 res.status(400).json("No puede ingresarse una cantidad menor a la cantidad de ejemplares prestados");
@@ -234,7 +234,7 @@ app.delete('/prestamos/:prestamo', function (req, res) {
     console.log(eliminarPrestamo);
     if(eliminarPrestamo != -1) {
         prestamos.splice(eliminarPrestamo, 1);
-        res.status(204).json("idPrestamo: " + eliminarPrestamo);
+        res.status(204).send();
     }
     else {
         res.status(404).json("El id del prestamo ingresado no existe");

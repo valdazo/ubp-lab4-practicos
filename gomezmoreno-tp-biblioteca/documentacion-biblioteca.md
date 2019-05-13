@@ -29,7 +29,6 @@
 	DELETE url/libros/<id_libro>
 ##### *Response*
 	204 No Content
-	Body: {“idLibro”:<id_Libro>}
 
 #### Si se ingresa el id de un libro que no existe:
 ##### *Response*
@@ -50,8 +49,7 @@
 		cantidad: <cantidad>
 	}
 ##### *Response*
-	204 No Content. 	
-	Body: {“idLibro”: <id_Libro>}
+	204 No Content
 
 #### Si se ingresa el id de un libro que no existe:
 ##### *Response*
@@ -73,7 +71,7 @@
 ##### *Request*
 	GET url/libros/<id_libro>
 ##### *Response*
-	200 OK.
+	200 OK
 	Body: {“Cantidad disponible”:<disponibles>}
 
 #### Si se ingresa el id de un libro que no existe:
@@ -90,7 +88,7 @@
 		nombre: <nombre>
 	}
 ##### *Response*
-	201 Created.
+	201 Created
 	Body: {“idSocio:” <id_Socio>}
 
 #### Si se quiere crear un socio sin ingresar un nombre:
@@ -132,7 +130,7 @@
 		fechaVencimiento: <fechaVencimiento>
 	}
 ##### *Response*
-	201 Created.
+	201 Created
 	Body: {“idPrestamo”: <id_Prestamo>}
 
 #### Si se ingresa el id de un socio que no existe:
@@ -160,7 +158,7 @@
 ##### *Request*
 	DELETE url/prestamos/<id_prestamo>
 ##### *Response*
-	204 No Content.
+	204 No Content
 
 #### Si se ingresa el id de un préstamo que no existe:
 ##### *Response*
