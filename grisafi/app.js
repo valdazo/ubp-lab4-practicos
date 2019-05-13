@@ -36,6 +36,7 @@ function Prestamo(id,idSocio,idLibro,dias){
     this.fechavencimiento=Date.now()+DIA_EN_MILISEGUNDOS*dias;
 }
 
+//devuelve la cantidad de ejmplares prestados de un libro
 function librosPrestados(idLibro){
     let cont=0;
     for (let i = 0; i < prestamos.length; i++) {
@@ -46,8 +47,9 @@ function librosPrestados(idLibro){
     return cont;
 }
 
+//actualiza la cantidad de ejemplares de un libro
 function updateBook(bookID,cantidad){
-    if(cantidad>librosPrestados(bookID)){
+    if(cantidad>=librosPrestados(bookID)){
         for (let i = 0; i < libros.length; i++) {
             if(bookID == libros[i].id){
                 libros[i].cantidad=cantidad;
@@ -61,6 +63,7 @@ function updateBook(bookID,cantidad){
     }
 }
 
+//encuentra el objeto libro/socio de acuerdo a su id
 function findID(id,coleccion){
     for (let i = 0; i < coleccion.length; i++) {
         if(id== coleccion[i].id){
@@ -70,30 +73,28 @@ function findID(id,coleccion){
     return 0;
 }
 
+//retorna true si el socio adeuda libros, false si no adeuda
 function adeuda(idSocio){
     let fecha_prest=new Array();
     for (let i = 0; i < prestamos.length; i++) {
         if(idSocio==prestamos[i].idSocio){
-            fecha_prest.push(new Date(prestamos[i].fechavencimiento));
-        }
-    }
-    for (let i = 0; i < fecha_prest.length; i++) {
-        if(Date.now()>fecha_prest[i]){
             return true;
         }
     }
     return false;
 }
 
+//devuelve true si el libro fue prestado, false si no lo fue
 function checkPrestado(idLibro){
     for (let i = 0; i < prestamos.length; i++) {
         if(prestamos[i].idLibro==idLibro){
-            return 1;
+            return true;
         }   
     }
-    return 0;
+    return false;
 }
 
+//elimina un libro
 function deleteBook(id){
     if(checkPrestado()==0){
         for (let i = 0; i < libros.length; i++) {
@@ -109,6 +110,7 @@ function deleteBook(id){
     }
 }
 
+//devuelve todos los prestamos
 function getPrestamos(idSocio){
     let prest=new Array();
     for (let i = 0; i < prestamos.length; i++) {
@@ -136,6 +138,7 @@ app.get('/socios',function(req,res){
     res.status(200).json(socios);
 })
 
+//devuelve todos los socios
 app.get('/socios/:idSocio',function(req,res){
     let socio=findID(req.params.idSocio,socios);
     if(socio!=0){
@@ -222,9 +225,9 @@ app.delete('/libros/:idlibro',function(req,res){
     }
 })
 
-function returnBook(idSocio,idLibro){
+function returnBook(idPrestamo){
     for (let i = 0; i < prestamos.length; i++) {
-        if(prestamos[i].idSocio==idSocio && prestamos[i].idLibro==idLibro){
+        if(prestamos[i].id==idPrestamo){
             console.log("Libro encontrado");
             console.log(prestamos[i]);
             prestamos.splice(i,1);
@@ -234,8 +237,8 @@ function returnBook(idSocio,idLibro){
     return 0;
 }
 
-app.delete('/prestamos/:idSocio/:idLibro',function(req,res){
-    if(returnBook(req.params.idSocio,req.params.idLibro)){
+app.delete('/prestamos/:idSocio/:idPrestamo',function(req,res){
+    if(returnBook(req.params.idPrestamo)){
         res.status(200).send("Libro devuelto");
         console.log(prestamos);
     }
