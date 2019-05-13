@@ -1,6 +1,6 @@
-#Documentación Práctico Biblioteca
+# Documentación Práctico Biblioteca
 
-###**RQ1.1:** Agregar libro a la librería
+### **RQ1.1:** Agregar libro a la librería
 *Request*
 	POST url/libros
 	Body:
@@ -24,7 +24,7 @@ Si se quiere agregar un libro sin ingresar un titulo:
 	Body: {"No puede agregarse un libro sin ingresar un titulo"}
 
 
-###**RQ1.2:** Eliminar libro de la librería
+### **RQ1.2:** Eliminar libro de la librería
 *Request*
 	DELETE url/libros/<id_libro>
 *Response*
@@ -42,7 +42,7 @@ Si se quiere eliminar un libro que está prestado:
 	Body: {"El libro no puede ser eliminado porque está prestado"}
 
 
-###**RQ1.3:** Modificar la cantidad de ejemplares de un libro en la librería
+### **RQ1.3:** Modificar la cantidad de ejemplares de un libro en la librería
 *Request*
 	PUT url/libros/<id_libro>
 	Body:
@@ -69,7 +69,7 @@ Si se quiere ingresar una cantidad que es menor a la cantidad de libros que est�
 	Body: {"No puede ingresarse una cantidad menor a la cantidad de ejemplares prestados"}
 
 
-###**RQ1.4:** Obtener la cantidad de ejemplares disponibles para préstamo en la librería
+### **RQ1.4:** Obtener la cantidad de ejemplares disponibles para préstamo en la librería
 *Request*
 	GET url/libros/<id_libro>
 *Response*
@@ -82,7 +82,7 @@ Si se ingresa el id de un libro que no existe:
 	Body: {"El id del libro ingresado no existe"}	
 
 
-###**RQ2.1:** Crear socio.
+### **RQ2.1:** Crear socio.
 *Request*
 	POST url/socios
 	Body:
@@ -99,7 +99,7 @@ Si se quiere crear un socio sin ingresar un nombre:
 	Body: {"No puede agregarse un socio sin ingresar un nombre"}
 
 
-###**RQ2.2:** Obtener los libros prestados al socio con sus fechas de vencimiento.
+### **RQ2.2:** Obtener los libros prestados al socio con sus fechas de vencimiento.
 *Request*
 	GET url/socios/<id_socio>/prestamos
 *Response*
@@ -122,7 +122,7 @@ Si el socio ingresado no tiene libros prestados:
 	Body: {"El socio no tiene libros prestados"}
 
 
-###**RQ3.1:** Registrar un préstamo de un libro a un socio.
+### **RQ3.1:** Registrar un préstamo de un libro a un socio.
 *Request*
 	POST url/prestamos
 	Body:
@@ -156,7 +156,7 @@ Si el socio tiene préstamos vencidos:
 	Body: {"Socio tiene prestamos vencidos, no puede pedir libros"}
 
 
-###**RQ3.2:** Un socio puede devolver un libro prestado.
+### **RQ3.2:** Un socio puede devolver un libro prestado.
 *Request*
 	DELETE url/prestamos/<id_prestamo>
 *Response*
