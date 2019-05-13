@@ -18,6 +18,8 @@
 	Body: {“id”:<id>}
     400: Bad request.
     Body: {"Cantidad debe ser mayor a 0 y entera"}
+    400: Bad request.
+    Body: {"Se debe ingresar un titulo del libro"}
 
 **RQ1.2**: Eliminar libro la librería. 
 
@@ -63,7 +65,7 @@
     404: Not found.
     Body: { "No existe el libro" }
     400: Bad request.
-    Body: { "La cantidad a ingresar es mayor a         la cantidad prestada" }
+    Body: { "La cantidad a ingresar debe ser mayor a la cantidad prestada" }
 
 **RQ1.4**: Obtener la cantidad de ejemplares disponibles para préstamo en la librería
 
@@ -149,7 +151,7 @@
     400: Bad request.
     Body: { "No hay ejemplares disponibles" }
     400: Bad request.
-    Body: { "Socio tiene libros vencidos, no puede pedir libros" }
+    Body: { "Socio tiene prestamos vencidos, no puede pedir libros" }
     
 
 **RQ3.2**: Devolver libro prestado.

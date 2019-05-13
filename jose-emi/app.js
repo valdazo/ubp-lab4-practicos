@@ -31,14 +31,20 @@ var prestamos = new Array();
 
 // REQ1.1 Añadir libros
 app.post('/libros',function(req,res){
-    if(req.body.cantidad>0 && Number.isInteger(req.body.cantidad)==true){
-        var nuevoLibro = new Libro(req.body.titulo,getNewID(),req.body.cantidad);
-        libros.push(nuevoLibro);
-        res.status(201).json(nuevoLibro.id);
+    if(req.body.titulo!=null){
+        if(req.body.cantidad>0 && Number.isInteger(req.body.cantidad)==true){
+            var nuevoLibro = new Libro(req.body.titulo,getNewID(),req.body.cantidad);
+            libros.push(nuevoLibro);
+            res.status(201).json(nuevoLibro.id);
+        }
+        else{
+            res.status(400).json("Cantidad debe ser mayor a 0 y entera");
+        }
     }
     else{
-        res.status(400).json("Cantidad debe ser mayor a 0 y entera");
+        res.status(400).json("Ingrese un nombre por favor");
     }
+    
 })
 
 // REQ1.2 Eliminar libros
@@ -62,7 +68,6 @@ app.delete('/libros/:idLibro',function(req,res){
 
 // REQ1.3 Modificar cantidad de ejemplares de un libro
 app.put('/libros/:idLibro', function(req,res){
-    //validar cantidad valida
     var libroMod;
     if(Number.isInteger(req.body.cantidad) == true && req.body.cantidad > 0){
         if(buscarID(libros, req.params.idLibro) != null)
@@ -72,7 +77,7 @@ app.put('/libros/:idLibro', function(req,res){
                 res.status(200).json(libroMod);
             }
             else{
-                res.status(400).json("La cantidad a ingresar es mayor a la cantidad prestada");
+                res.status(400).json("La cantidad a ingresar debe ser mayor a la cantidad prestada");
             }
             
         }
@@ -100,8 +105,7 @@ app.get('/libros/:idLibro', function(req,res){
 
 // REQ2.1 Añadir socios
 app.post('/socios', function(req, res){
-    var nuevoSocio = new Socio(req.body.nombre,getNewID());
-    socios.push(nuevoSocio);
+    socios.push(new Socio(req.body.nombre,getNewID()));
     res.status(201);
     res.json(nuevoSocio.id);
 })
@@ -126,9 +130,7 @@ app.get('/prestamos/:idSocio', function(req,res){
 // REQ3.1 Añadir prestamos
 app.post('/prestamos', function(req,res){
     var validarDatos = validarDatosPrestamo(req.body.idLibro, req.body.idSocio);
-    var prestamosSocio;
-    var comprobarVencidos;
-    var nuevoPrestamo;
+    var prestamosSocio, comprobarVencidos, nuevoPrestamo;
     
     if(validarDatos == true){
         if(disponibilidad(req.body.idLibro)>0){
@@ -141,7 +143,7 @@ app.post('/prestamos', function(req,res){
                 res.status(201).json(nuevoPrestamo.id);
             }
             else{
-                res.status(400).json("Socio tiene libros vencidos, no puede pedir libros");
+                res.status(400).json("Socio tiene prestamos vencidos, no puede pedir libros");
             }
         }
         else{
@@ -185,8 +187,6 @@ app.get('/prestamos',function(req,res){
     res.json(prestamos);
 })
 
-
-
 libros.push(new Libro("La vida de Juan Pereyra",getNewID(),10));
 libros.push(new Libro("24hs UML",getNewID(),18));
 libros.push(new Libro("El perro siberiano",getNewID(),14));
@@ -194,11 +194,6 @@ libros.push(new Libro("El perro siberiano",getNewID(),14));
 socios.push(new Socio("Juan Pereyra",getNewID()));
 socios.push(new Socio("Juana Manso",getNewID()));
 socios.push(new Socio("Pedro Picapiedra",getNewID()));
-
-
-app.get('/', function (req, res) {
-   res.sendFile( __dirname + "/" + "index.html");
-})
 
 function getNewID(){
     return Math.random().toString(36).substr(2,9);
@@ -231,7 +226,6 @@ function cantidadLibrosPrestados(id){
 function disponibilidad(id){
     pos = econtrarIndicePorId(libros, id);
     disponibles = libros[pos].cantidad - cantidadLibrosPrestados(id);
-   
     return disponibles;
 }
 
