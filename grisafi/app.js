@@ -63,7 +63,7 @@ function updateBook(bookID,cantidad){
 
 function findID(id,coleccion){
     for (let i = 0; i < coleccion.length; i++) {
-        if(id= coleccion[i].id){
+        if(id== coleccion[i].id){
             return coleccion[i];
         }
     }
