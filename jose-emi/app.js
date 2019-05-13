@@ -4,7 +4,7 @@ var bodyParser = require('body-parser');
 
 app.use(bodyParser.json());
 
-var diasMiliseg = 1000 * 60 * 60 * 24
+const DIAS_MILI_SEG = 1000 * 60 * 60 * 24
 
 function Libro(titulo,id,cantidad){
     this.id = id;
@@ -167,8 +167,7 @@ app.delete('/prestamos/:idPrestamo', function(req,res){
         res.status(404).json("El prestamo no existe");
     }
     
-    res.json(prestamo.idLibro);
-    res.status(204);
+    res.status(204).json(prestamo.idLibro);
 })
 
 // Obtener todos los socios
@@ -202,7 +201,7 @@ function getNewID(){
 function obtenerFechaVto(dias){
     var f = new Date();
     var fechaMiliseg = f.getTime();
-    var fecVto = fechaMiliseg + (diasMiliseg * dias);
+    var fecVto = fechaMiliseg + (DIAS_MILI_SEG * dias);
     return new Date(fecVto);
 }
 
@@ -266,7 +265,7 @@ function buscarLibrosPrestados(prestamos){
 function existeLibroPrestado(librosPrestados,idLibro){
     for(var l of librosPrestados){
         if(l == idLibro){
-            return true
+            return true;
         }
     }
     return false;
