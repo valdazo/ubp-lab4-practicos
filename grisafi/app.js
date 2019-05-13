@@ -61,19 +61,10 @@ function updateBook(bookID,cantidad){
     }
 }
 
-function findBook(bookID){
-    for (let i = 0; i < libros.length; i++) {
-        if(bookID == libros[i].id){
-            return libros[i];
-        }
-    }
-    return 0;
-}
-
-function findMember(memberID){
-    for (let i = 0; i < socios.length; i++) {
-        if(memberID==socios[i].id){
-            return socios[i];
+function findID(id,coleccion){
+    for (let i = 0; i < coleccion.length; i++) {
+        if(id= coleccion[i].id){
+            return coleccion[i];
         }
     }
     return 0;
@@ -146,9 +137,9 @@ app.get('/socios',function(req,res){
 })
 
 app.get('/socios/:idSocio',function(req,res){
-    var socio=findMember(req.params.idSocio);
+    var socio=findID(req.params.idSocio,socios);
     if(socio!=0){
-        res.status(200).json(findMember(req.params.idSocio));
+        res.status(200).json(socio);
     }
     else{
         res.status(404).send("Socio no encontrado");
@@ -156,7 +147,7 @@ app.get('/socios/:idSocio',function(req,res){
 })
 
 app.get('/socios/:idSocio/prestamos',function(req,res){
-    if(findMember(req.params.idSocio)){
+    if(findID(req.params.idSocio,socios)){
         var prest=getPrestamos(req.params.idSocio);
         if(prest.length==0){
             res.status(200).send("No hay Prestamos Realizados por el Socio");
@@ -178,7 +169,7 @@ app.get('/prestamos',function(req,res){
 })
 
 app.get('/libros/:idLibro',function(req,res){
-    var book=findBook(req.params.idLibro);
+    var book=findID(req.params.idLibro,libros);
     if(book!=0){
         res.status(200).json({"idLibro":parseInt(req.params.idLibro),"disponibles":book.disponibles()});
     }
@@ -188,8 +179,13 @@ app.get('/libros/:idLibro',function(req,res){
 })
 
 app.post('/socios',function(req,res){
-    socios.push(new Socio(req.body.nombre,req.body.id));   
-    res.status(201).json(req.body);
+    if (req.body.nombre!=null && req.body.id!=null){
+        socios.push(new Socio(req.body.nombre,req.body.id));   
+        res.status(201).json(req.body);
+    }
+    else{
+        res.status(400).send("Parametros Incorrectos");
+    }
 })
 
 app.post('/libros',function(req,res){
@@ -203,7 +199,7 @@ app.post('/prestamos',function(req,res){
         res.status(400).send("El socio adeuda libros");
     }
     else{
-        if(findBook(req.body.idLibro).disponibles()>0){
+        if(findID(req.body.idLibro,libros).disponibles()>0){
             prestamos.push(new Prestamo(generatePrestamosID(),req.body.idSocio,req.body.idLibro,req.body.dias));
             res.status(200).send("Prestamo realizado con exito");
         }
@@ -251,7 +247,7 @@ app.delete('/prestamos/:idSocio/:idLibro',function(req,res){
 app.put('/libros/:idLibro',function(req,res){
     var resultado=updateBook(req.params.idLibro,req.body.cantidad);
     if(resultado==1){
-        res.status(200).json(findBook(req.params.idLibro));
+        res.status(200).json(findID(req.params.idLibro,libros));
     }
     else if(resultado==-1){
         res.status(400).send("Error: la cantidad de libros es menor a la cantidad de libros prestados");
