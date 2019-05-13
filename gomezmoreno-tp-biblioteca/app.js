@@ -27,7 +27,7 @@ function Socio(id_Socio, nombre) {
 }
 
 function Prestamo(idPrestamo, idSocio, idLibro, dias) {
-    this.idPrestamo = idPrestamo;
+    this.id = idPrestamo;
     this.idSocio = idSocio;
     this.idLibro = idLibro;
     this.fechaVencimiento = Date.now() + DIA_EN_MILISEGUNDOS * dias;
