@@ -4,7 +4,7 @@ var bodyParser = require('body-parser');
 
 app.use(bodyParser.json());
 
-const DIAS_MILI_SEG = 1000 * 60 * 60 * 24
+const DIAS_MILI_SEG = 1000 * 60 * 60 * 24;
 
 function Libro(titulo,id,cantidad){
     this.id = id;
@@ -32,7 +32,7 @@ var prestamos = new Array();
 // REQ1.1 Añadir libros
 app.post('/libros',function(req,res){
     if(req.body.titulo!=null){
-        if(req.body.cantidad>0 && Number.isInteger(req.body.cantidad)==true){
+        if(Number.isInteger(req.body.cantidad) && req.body.cantidad>0 ){
             var nuevoLibro = new Libro(req.body.titulo,getNewID(),req.body.cantidad);
             libros.push(nuevoLibro);
             res.status(201).json(nuevoLibro.id);
@@ -284,8 +284,7 @@ function modifCantEjemplares(idLibro, nuevaCant){
     determina si la fechaActual(en la que esta pidiendo un nuevo prestamo), es mayor a la fechaVto de alguno
     de los libros que le fueron prestados, de ser asi retorna FALSO, de lo contrario retorna TRUE */
 function comprobarLibrosVencidos(prestamosSocio){
-    var f = new Date();
-    fechaActual = f.getTime();
+    fechaActual = Date.now();
     if(prestamosSocio!=null){
         for(var p of prestamosSocio){
             if(fechaActual > p.fecVto){
