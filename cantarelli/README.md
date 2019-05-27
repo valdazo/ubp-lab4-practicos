@@ -7,14 +7,9 @@ GET url/libros
     Status: 200 OK
 [
     {
-        "id": 1,
-        "titulo": "Libro 1",
-        "cantidad": 1
-    },
-    {
-        "id": 2,
-        "titulo": "Libro 2",
-        "cantidad": 5
+        "id": <"id">,
+        "titulo": <"titulo">,
+        "cantidad": <"cantidad">
     }
 ]
 
@@ -25,11 +20,20 @@ GET url/libros/:idlibro
 
 Params key: idlibro
        value: 2
-127.0.0.1:8080/libros/2
 
 *Response*
  Status: 200 OK
- 3
+ <"cantidad">
+
+ Params key: idlibro
+       value: 3
+
+*Response*
+Status: 404 Not Found  
+{
+    "message": "No se encuentra el id del libro ingresado"
+}
+
 
 --Obtener Socios
 
@@ -40,12 +44,8 @@ GET url/socios
 *Response*
 [
     {
-        "id": 1,
-        "nombre": "Socio 1"
-    },
-    {
-        "id": 2,
-        "nombre": "Socio 2"
+        "id": <"id">,
+        "nombre": <"nombre">
     }
 ]
 
@@ -60,22 +60,10 @@ GET url/prestamos
  Status: 200 OK
 [
     {
-        "id": 1,
-        "idLibro": 1,
-        "idSocio": 1,
-        "fechaVencimiento": "2019-05-18T18:38:21.008Z"
-    },
-    {
-        "id": 2,
-        "idLibro": 2,
-        "idSocio": 2,
-        "fechaVencimiento": "2019-05-23T18:38:21.008Z"
-    },
-    {
-        "id": 3,
-        "idLibro": 2,
-        "idSocio": 1,
-        "fechaVencimiento": "2019-05-16T18:38:21.008Z"
+        "id": <"id">,
+        "idLibro": <"idLibro">,
+        "idSocio": <"idSocio">,
+        "fechaVencimiento": <"fechaVencimiento">
     }
 ]
 
@@ -89,20 +77,24 @@ GET url/socios/:idsocio/prestamos
 Params key: idSocio
        value: 2
 
-127.0.0.1:8080/socios/2/prestamos
-
 *Response*
 Status: 200 OK
 [
     {
-        "idLibro": 2,
-        "Fecha de vencimiento": "2019-05-23T18:38:21.008Z"
+        "idLibro": <"idLibro">,
+        "Fecha de vencimiento": <"fechaVencimiento">
     }
 ]
 
-Status: 400 Bad Request
-Body:
-    No se puede obtener los libros prestados al socio
+Params key: idSocio
+       value: 8
+
+*Response*
+Status: 404 Not Found
+{
+    "message": "No se encuentra el id del libro ingresado"
+}
+
 
 
 --Actualiza la cantidad de un libros
@@ -116,44 +108,76 @@ Params key: idlibro
 
 Body:
 {
-	"cantidad": 0
+	"cantidad":  <"cantidad">
 }
 
 *Response*
 
-Status: 204 No Content
+{
+    "message": "No se puede actualizar la cantidad de libros, es menor a la cantidad de libros prestados"
+}
+
+Params key: idlibro 
+       value: 1
+
+Body:
+{
+	"cantidad":  <"cantidad">
+}
+
+*Response*
+
+Status: 200
+{
+    "message": "Se actualizo correctamente la cantidad del libro"
+}
 
 
+Params key: idlibro 
+       value: 5
+
+Body:
+{
+	"cantidad":  <"cantidad">
+}
+
+Status: 400
+{
+    "message": "No se encuentra el id del libro ingresado"
+}
 
 
 --Agregar nuevo socio
 
+POST url/socios
+
 *Request*
 Body:
 {
-	"id": 3, 
-	"nombre": "Socio 3"
+	 "id": <"id">,
+    "nombre": <"nombre">
 }
-POST url/socios
 
 *Response*
 Status: 200 OK
 [
     {
-        "id": 1,
-        "nombre": "Socio 1"
-    },
-    {
-        "id": 2,
-        "nombre": "Socio 2"
-    },
-    {
-        "id": 3,
-        "nombre": "Socio 3"
+        "id": <"id">,
+        "nombre": <"nombre">
     }
 ]
 
+*Request*
+Body:
+{
+	"id": <"id">
+}
 
+*Response*
+
+{
+    "message": "Datos incompletos"
+}
 
 
 --Agrega nuevo libro
@@ -163,30 +187,32 @@ Status: 200 OK
 POST url/libros
 Body:
     {
-	"id": 7, 
-	"titulo": "Libro 7", 
-	"cantidad": 10
+	"id": <"id">,
+	"titulo": <"titulo">, 
+	"cantidad":  <"cantidad">
 
 }
 *Response*
 Status: 201 Created
 [
     {
-        "id": 1,
-        "titulo": "Libro 1",
-        "cantidad": 1
-    },
-    {
-        "id": 2,
-        "titulo": "Libro 2",
-        "cantidad": 5
-    },
-    {
-        "id": 7,
-        "titulo": "Libro 7",
-        "cantidad": 10
+        "id": <"id">,
+        "titulo": <"titulo">,
+        "cantidad":  <"cantidad">
     }
 ]
+
+*Request*
+Body:
+{
+	"id": <"id">
+}
+
+*Response*
+
+{
+    "message": "Datos incompletos"
+}
 
 
 
@@ -198,49 +224,45 @@ POST url/prestamos
 
 body
 {
-	"id": 4,
-	"idLibro": 1,
-	"idSocio": 2,
-	"dias": 0
+	"id": <"id">,
+	"idLibro": <"idLibro">,
+	"idSocio": <"idSocio">,
+	"dias": <"dias">
 }
 
 
 *Response*
 
 Status: 201 Created
-Body:
-[
-    {
-        "id": 1,
-        "idLibro": 1,
-        "idSocio": 1,
-        "fechaVencimiento": "2019-05-18T18:38:21.008Z"
-    },
-    {
-        "id": 2,
-        "idLibro": 2,
-        "idSocio": 2,
-        "fechaVencimiento": "2019-05-23T18:38:21.008Z"
-    },
-    {
-        "id": 3,
-        "idLibro": 2,
-        "idSocio": 1,
-        "fechaVencimiento": "2019-05-16T18:38:21.008Z"
-    },
-    {
-        "id": 4,
-        "idLibro": 2,
-        "idSocio": 2,
-        "fechaVencimiento": "2019-05-13T18:57:07.603Z"
-    }
-]
+{
+    "message": "El prestamo se registro correctamente"
+}
 
-Status: 400 Bad Request
-Body:
-No se puede realizar el prestamo
+body
+{
+	"id": 4,
+	"idLibro": 1,
+	"idSocio": 2,
+	"dias": 0
+}
 
+*Response*
+{
+    "message": "No hay libros disponibles"
+}
 
+body
+{
+	"id": 4,
+	"idLibro": 2,
+	"idSocio": 2,
+	"dias": -1
+}
+
+*Response*
+{
+    "message": "El socio adeuda libros"
+}
 
 
 --Socio devuelve libro prestamo, se borra el prestamo
@@ -249,28 +271,48 @@ No se puede realizar el prestamo
 
 DELETE url/prestamos/:idSocio/:idLibro
 
-Params key: 3
-        value: 2
+Params key: :idSocio/:idLibro
+        value: 1 / 1
+
 *Response*
+Status: 200
+{
+    "message": "Se elimino correctamente el prestamo"
+}
 
-No se puede borrar el prestamo, no existe
+Params key: :idSocio/:idLibro
+        value: 1 / 5
 
+*Response*
+Status: 404
+
+{
+    "message": "No se puede borrar el prestamo, no existe"
+}
 
 
 --Se borra un libro
 
+DELETE url/libros/:idLibro
+
 *Request*
-Params: key: id
-        value: 1
-
-Params: key: id
-        value: 3
-
-DELETE url/libros/:id
+Params: key: idLibro
+        value: 2
 
 *Response*
 Status: 400 Bad Request
 Body:
-    No se puede eliminar el libro
+    {
+    "message": "No se puede eliminar el libro porque hay prestados"
+}
 
+*Request*
+Params: key: idLibro
+        value: 7
+
+*Response*
 Status: 200
+Body:
+    {
+    "message": "Se elimino correctamente el libro"
+}

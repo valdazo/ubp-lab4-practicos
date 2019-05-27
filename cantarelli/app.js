@@ -108,11 +108,13 @@ function librosAdeudados(idSocio){
 }
 
 function buscarPorId(idAux, coleccion){
+    let aux = -1;
     for (let i = 0; i < coleccion.length; i++) {
         if(idAux == coleccion[i].id){
-            return coleccion[i].id;
+            aux = 0;
         }      
     }
+    return aux;
 }
 
 var libros = new Array();
@@ -139,7 +141,7 @@ app.get('/libros', function(req,res){
 })
 
 app.get('/libros/:idlibro', function(req,res){   
-    if (buscarPorId(idLibro) == 0){
+    if (buscarPorId(req.params.idlibro, libros) == 0){
         res.status(200).json(disponibleLibro(req.params.idlibro)); 
     } else{
         res.status(404).json({
@@ -155,31 +157,31 @@ app.get('/prestamos', function(req,res){
 
 /*Obtener los libros prestados al socio con sus fechas de vencimiento.*/
 app.get('/socios/:idsocio/prestamos', function(req,res){
-    if(buscarPorId(req.params.idsocio, socios) != 0){
-        res.status(400).json({
+    if(buscarPorId(req.params.idsocio, socios) == 0){
+        res.status(200).json(buscarPrestamos(req.params.idsocio));
+    }else{
+        res.status(404).json({
             message: "No se puede obtener los libros prestados al socio"
         });
-    }else{
-        res.status(200).json(buscarPrestamos(req.params.idsocio));  
     }   
 })
 
 /*actualiza*/
 app.put('/libros/:idlibro', function(req,res){
-    if(buscarPorId(req.params.idlibro, libros) != 0){
-        res.status(400).json({
-            message: "No se encuentra el id del libro ingresado"
-        });
-    }else{
+    if(buscarPorId(req.params.idlibro, libros) == 0){
         if(actualizarCantidad(req.params.idlibro,req.body.cantidad) == 0){
-            res.status(204).json({
+            res.status(200).json({
                 message: "Se actualizo correctamente la cantidad del libro"
             });
         }else{
             res.status(400).json({
                 message: "No se puede actualizar la cantidad de libros, es menor a la cantidad de libros prestados"
             });
-        }
+        }0
+    }else{
+        res.status(400).json({
+            message: "No se encuentra el id del libro ingresado"
+        });
     }
 })
 
@@ -196,12 +198,12 @@ app.post('/socios', function(req,res){
 })
 
 app.post('/libros', function(req,res){
-    if(req.body.id == null || req.body.nombre == null || req.body.cantidad < 0 || req.body.cantidad == null){
+    if(req.body.id == null || req.body.titulo == null || req.body.cantidad < 0 || req.body.cantidad == null){
         res.status(400).json({
             message: "Datos incompletos"
         });
     } else{
-        libros.push(new Libro(req.body.id, req.body.nombre,req.body.cantidad));
+        libros.push(new Libro(req.body.id, req.body.titulo,req.body.cantidad));
         res.status(201).json(libros);
     }
 })
@@ -229,7 +231,7 @@ app.post('/prestamos', function(req,res){
 
 /* Un socio puede devolver un libro prestado*/
 app.delete('/prestamos/:idSocio/:idLibro',function(req,res){
-    if(buscarPorId(req.params.idSocio, socios) != -1 || buscarPorId(req.params.idLibro, libros) != -1){
+    if(buscarPorId(req.params.idSocio, socios) == 0 && buscarPorId(req.params.idLibro, libros) == 0){
         borrarPrestamo(req.params.idSocio, req.params.idLibro);
             res.status(200).json({
                 message: "Se elimino correctamente el prestamo"
