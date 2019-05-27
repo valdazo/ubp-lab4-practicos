@@ -76,7 +76,7 @@ function findID(id, coleccion) {
 //retorna true si el socio adeuda libros, false si no adeuda
 function adeuda(idSocio) {
     for (let i = 0; i < prestamos.length; i++) {
-        if (idSocio == prestamos[i].idSocio && prestamos[i].fechavencimiento<Date.now()) {
+        if (idSocio == prestamos[i].idSocio && prestamos[i].fechavencimiento < Date.now()) {
             return true;
         }
     }
