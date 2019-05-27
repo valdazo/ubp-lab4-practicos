@@ -240,10 +240,11 @@ Status: 201 Created
 
 body
 {
-	"id": 4,
-	"idLibro": 1,
-	"idSocio": 2,
-	"dias": 0
+	
+	"id": <"id">,
+	"idLibro": <"idLibro">,
+	"idSocio": <"idSocio">,
+	"dias": <"dias">
 }
 
 *Response*
@@ -253,10 +254,10 @@ body
 
 body
 {
-	"id": 4,
-	"idLibro": 2,
-	"idSocio": 2,
-	"dias": -1
+	"id": <"id">,
+	"idLibro": <"idLibro">,
+	"idSocio": <"idSocio">,
+	"dias": <"dias">
 }
 
 *Response*
@@ -271,8 +272,8 @@ body
 
 DELETE url/prestamos/:idSocio/:idLibro
 
-Params key: :idSocio/:idLibro
-        value: 1 / 1
+Params key: :idPrestamo
+        value: 1
 
 *Response*
 Status: 200
@@ -280,8 +281,8 @@ Status: 200
     "message": "Se elimino correctamente el prestamo"
 }
 
-Params key: :idSocio/:idLibro
-        value: 1 / 5
+Params key: :idPrestamo
+        value: 1
 
 *Response*
 Status: 404

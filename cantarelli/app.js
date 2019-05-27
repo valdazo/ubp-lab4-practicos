@@ -34,55 +34,40 @@ function Prestamo(id, idLibro, idSocio, dias){
     this.fechaVencimiento = Date.now() + MILISEGUNDOS * dias;
 }
 
-function borrarPrestamo(idS, idL){
-    for (let i = 0; i < prestamos.length; i++) {
-        if(idS==prestamos[i].idSocio){
-            if(idL == prestamos[i].idLibro){
-                prestamos.splice(i,1);
-                return 0;
-            }
-        }
-    }
-}
-
-function borrarLibros(id){
-    for (let i = 0; i < libros.length; i++) {
-        if(id == libros[i].id){
-            libros.splice(i,1);
+function borrar(id, coleccion){
+    for (let i = 0; i < coleccion.length; i++) {
+        if(id == coleccion[i].id){
+            coleccion.splice(i,1);
         }
     }
 }
 
 function controlarPrestamosLibros(id){
-    let prestados = 0;
+    let prestados = false;
     for(let i=0; i < prestamos.length; i++){
         if(id == prestamos[i].idLibro){
-            prestados++;
+            prestados = true;
         }        
     }
     return prestados;
 }
 
 function disponibleLibro(idL){
+    let cantidad = -1;
     for(let i=0; i < libros.length; i++){
         if(idL == libros[i].id){
-            return libros[i].disponibles();
+            cantidad = libros[i].disponibles();
         }        
     }
-    return -1;
+    return cantidad;
 }
 
 function actualizarCantidad(idL, cant){
-    if(cant > controlarPrestamosLibros(idL)){
-        for(let i=0; i < libros.length; i++){
-            if (idL == libros[i].id){
-                libros[i].cantidad = cant;
-                return 0;
-            }
-        } 
-    }else{
-        return -1;
-    }      
+    for(let i=0; i < libros.length; i++){
+        if (idL == libros[i].id){
+            libros[i].cantidad = cant;
+        }
+    }    
 }
 
 function buscarPrestamos(idS){
@@ -97,26 +82,28 @@ function buscarPrestamos(idS){
 }
 
 function librosAdeudados(idSocio){
+    let existe = false;
     for(let i=0; i < prestamos.length; i++){
         if(idSocio == prestamos[i].idSocio){
             if(Date.now() > prestamos[i].fechaVencimiento){
-                return -1;
+               existe = true;
             }
         }
     }
-   return 0;
+    return existe;
 }
 
 function buscarPorId(idAux, coleccion){
-    let aux = -1;
+    let existe = false;
     for (let i = 0; i < coleccion.length; i++) {
         if(idAux == coleccion[i].id){
-            aux = 0;
+            existe = true;
         }      
     }
-    return aux;
+    return existe;
 }
 
+//TODO valores utilizados como prueba hasta que coloque la base de datos
 var libros = new Array();
 var socios = new Array();
 var prestamos = new Array();
@@ -129,7 +116,6 @@ socios.push(new Socio(2, "Socio 2"));
 
 prestamos.push(new Prestamo(1, 1, 1, 5));
 prestamos.push(new Prestamo(2, 2, 2, 10));
-//prestamos.push(new Prestamo(3, 2, 1, 3));
 
 app.get('/socios', function(req,res){
     res.status(200).json(socios);    
@@ -141,7 +127,7 @@ app.get('/libros', function(req,res){
 })
 
 app.get('/libros/:idlibro', function(req,res){   
-    if (buscarPorId(req.params.idlibro, libros) == 0){
+    if (buscarPorId(req.params.idlibro, libros)){
         res.status(200).json(disponibleLibro(req.params.idlibro)); 
     } else{
         res.status(404).json({
@@ -157,7 +143,7 @@ app.get('/prestamos', function(req,res){
 
 /*Obtener los libros prestados al socio con sus fechas de vencimiento.*/
 app.get('/socios/:idsocio/prestamos', function(req,res){
-    if(buscarPorId(req.params.idsocio, socios) == 0){
+    if(buscarPorId(req.params.idsocio, socios)){
         res.status(200).json(buscarPrestamos(req.params.idsocio));
     }else{
         res.status(404).json({
@@ -168,17 +154,18 @@ app.get('/socios/:idsocio/prestamos', function(req,res){
 
 /*actualiza*/
 app.put('/libros/:idlibro', function(req,res){
-    if(buscarPorId(req.params.idlibro, libros) == 0){
-        if(actualizarCantidad(req.params.idlibro,req.body.cantidad) == 0){
+    if(buscarPorId(req.params.idlibro, libros)){
+        if(req.body.cantidad > controlarPrestamosLibros(req.params.idlibro)){
+            actualizarCantidad(req.params.idlibro,req.body.cantidad);
             res.status(200).json({
                 message: "Se actualizo correctamente la cantidad del libro"
             });
-        }else{
+        } else{
             res.status(400).json({
                 message: "No se puede actualizar la cantidad de libros, es menor a la cantidad de libros prestados"
             });
-        }0
-    }else{
+        }
+    } else{
         res.status(400).json({
             message: "No se encuentra el id del libro ingresado"
         });
@@ -211,7 +198,7 @@ app.post('/libros', function(req,res){
 /*Registrar un préstamo de un libro a un socio.*/
 app.post('/prestamos', function(req,res){
     if(disponibleLibro(req.body.idLibro) > 0){
-        if(librosAdeudados(req.body.idSocio) == 0){
+        if(!librosAdeudados(req.body.idSocio)){
         prestamos.push(new Prestamo(req.body.id, req.body.idLibro, req.body.idSocio, req.body.dias));
         res.status(201).json({
             message: "El prestamo se registro correctamente"
@@ -230,9 +217,9 @@ app.post('/prestamos', function(req,res){
 })
 
 /* Un socio puede devolver un libro prestado*/
-app.delete('/prestamos/:idSocio/:idLibro',function(req,res){
-    if(buscarPorId(req.params.idSocio, socios) == 0 && buscarPorId(req.params.idLibro, libros) == 0){
-        borrarPrestamo(req.params.idSocio, req.params.idLibro);
+app.delete('/prestamos/:idPrestamo',function(req,res){
+    if(buscarPorId(req.params.idPrestamo, prestamos)){
+        borrar(req.params.idPrestamo, prestamos);
             res.status(200).json({
                 message: "Se elimino correctamente el prestamo"
             });
@@ -244,9 +231,9 @@ app.delete('/prestamos/:idSocio/:idLibro',function(req,res){
 })
 
 app.delete('/libros/:idLibro',function(req,res){
-    if(buscarPorId(req.params.idLibro, libros) != -1){        
-        if(controlarPrestamosLibros(req.params.idLibro) == 0){ 
-            borrarLibros(req.params.idLibro);
+    if(buscarPorId(req.params.idLibro, libros)){        
+        if(!controlarPrestamosLibros(req.params.idLibro)){ 
+            borrar(req.params.idLibro, libros);
             res.status(200).json({
                 message: "Se elimino correctamente el libro"
             });
