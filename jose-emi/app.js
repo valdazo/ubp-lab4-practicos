@@ -158,16 +158,16 @@ app.post('/prestamos', function(req,res){
 
 // REQ3.2 Devolver libro prestado
 app.delete('/prestamos/:idPrestamo', function(req,res){
-    var prestamo = buscarID(req.params.idPrestamo);
-    if(prestamo != null)
+    var indicePrestamo = buscarID(req.params.idPrestamo);
+    if(indicePrestamo != -1)
     {
-        prestamos.splice(econtrarIndicePorId(libros, prestamo.id), 1);
+        indicePrestamo.splice(indicePrestamo, 1);
     }
     else{
         res.status(404).json("El prestamo no existe");
     }
     
-    res.status(204).json(prestamo.idLibro);
+    res.status(204).send();
 })
 
 // Obtener todos los socios
@@ -186,6 +186,7 @@ app.get('/prestamos',function(req,res){
     res.json(prestamos);
 })
 
+// Estos son algunos ejemplos para no tener que cargar a mano los RQ
 libros.push(new Libro("La vida de Juan Pereyra",getNewID(),10));
 libros.push(new Libro("24hs UML",getNewID(),18));
 libros.push(new Libro("El perro siberiano",getNewID(),14));
