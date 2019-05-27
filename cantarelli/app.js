@@ -17,7 +17,7 @@ function Libro(id, titulo, cantidad){
     
     this.disponibles=function(){
         var contador = 0;
-        for(const prest of prestamos) {
+        for(var prest of prestamos) {
             if(prest.idLibro ==  this.id){
                 contador++;
             }
@@ -31,7 +31,7 @@ function Prestamo(id, idLibro, idSocio, dias){
     this.id = id;
     this.idLibro = idLibro
     this.idSocio = idSocio;    
-    this.fechaVencimiento = new Date(Date.now() + MILISEGUNDOS * dias);
+    this.fechaVencimiento = Date.now() + MILISEGUNDOS * dias;
 }
 
 function borrarPrestamo(idS, idL){
@@ -39,40 +39,28 @@ function borrarPrestamo(idS, idL){
         if(idS==prestamos[i].idSocio){
             if(idL == prestamos[i].idLibro){
                 prestamos.splice(i,1);
-                console.log(prestamos);
-                return 1;
+                return 0;
             }
         }
     }
-    return 0;
 }
 
-function borrarLibro(id){
-    console.log(id);
-    var aux = controlarPrestamosLibros(id);
+function borrarLibros(id){
     for (let i = 0; i < libros.length; i++) {
-        if(id==libros[i].id &&  aux == 0){
+        if(id == libros[i].id){
             libros.splice(i,1);
-            console.log(libros);
-            return 0;
         }
     }
-    
-    return -1;
 }
 
 function controlarPrestamosLibros(id){
-    console.log(id);
-    var aux = new Array();
+    let prestados = 0;
     for(let i=0; i < prestamos.length; i++){
         if(id == prestamos[i].idLibro){
-            return -1;
-        }else{
-            aux.push({"idLibro":prestamos[i].idLibro});
-        }
-        
+            prestados++;
+        }        
     }
-    return 0;
+    return prestados;
 }
 
 function disponibleLibro(idL){
@@ -81,28 +69,20 @@ function disponibleLibro(idL){
             return libros[i].disponibles();
         }        
     }
-}
-
-function controlarCantidad(idL){
-    for (let i = 0; i < libros.length; i++) {
-        if(libros[i].id==idL){
-                return libros[i].cantidad - libros[i].disponibles();
-        }      
-    }
+    return -1;
 }
 
 function actualizarCantidad(idL, cant){
-    var aux = controlarCantidad(idL)
-    console.log(aux);
-    for(let i=0; i < libros.length; i++){
-        if(idL == libros[i].id && cant < aux){
-            console.log("Hay %d libros prestados", aux);
-        }else{
-            if (idL == libros[i].id && cant > aux){
-               libros[i].cantidad = cant;
+    if(cant > controlarPrestamosLibros(idL)){
+        for(let i=0; i < libros.length; i++){
+            if (idL == libros[i].id){
+                libros[i].cantidad = cant;
+                return 0;
             }
-        }
-    }
+        } 
+    }else{
+        return -1;
+    }      
 }
 
 function buscarPrestamos(idS){
@@ -117,7 +97,6 @@ function buscarPrestamos(idS){
 }
 
 function librosAdeudados(idSocio){
-
     for(let i=0; i < prestamos.length; i++){
         if(idSocio == prestamos[i].idSocio){
             if(Date.now() > prestamos[i].fechaVencimiento){
@@ -128,22 +107,12 @@ function librosAdeudados(idSocio){
    return 0;
 }
 
-function buscarIdLibro(idL){
-    for (let i = 0; i < libros.length; i++) {
-        if(libros[i].id==idL){
-                return 0
+function buscarPorId(idAux, coleccion){
+    for (let i = 0; i < coleccion.length; i++) {
+        if(idAux == coleccion[i].id){
+            return coleccion[i].id;
         }      
     }
-    return -1;
-}
-
-function buscarIdSocio(idS){
-    for (let i = 0; i < socios.length; i++) {
-        if(socios[i].id==idS){
-                return 0
-        }      
-    }
-    return -1;
 }
 
 var libros = new Array();
@@ -158,7 +127,7 @@ socios.push(new Socio(2, "Socio 2"));
 
 prestamos.push(new Prestamo(1, 1, 1, 5));
 prestamos.push(new Prestamo(2, 2, 2, 10));
-prestamos.push(new Prestamo(3, 2, 1, 3));
+//prestamos.push(new Prestamo(3, 2, 1, 3));
 
 app.get('/socios', function(req,res){
     res.status(200).json(socios);    
@@ -169,20 +138,27 @@ app.get('/libros', function(req,res){
     res.status(200).json(libros);      
 })
 
-app.get('/libros/:idlibro', function(req,res){      
-    res.status(200).json(disponibleLibro(req.params.idlibro));  
+app.get('/libros/:idlibro', function(req,res){   
+    if (buscarPorId(idLibro) == 0){
+        res.status(200).json(disponibleLibro(req.params.idlibro)); 
+    } else{
+        res.status(404).json({
+            message: "No se encuentra el id del libro ingresado"
+        });
+    }
+     
 })
 
 app.get('/prestamos', function(req,res){
-
     res.status(200).json(prestamos);     
 })
 
 /*Obtener los libros prestados al socio con sus fechas de vencimiento.*/
 app.get('/socios/:idsocio/prestamos', function(req,res){
-    if(buscarIdSocio(req.params.idsocio) != 0){
-        res.status(400);
-        res.send("No se puede obtener los libros prestados al socio");
+    if(buscarPorId(req.params.idsocio, socios) != 0){
+        res.status(400).json({
+            message: "No se puede obtener los libros prestados al socio"
+        });
     }else{
         res.status(200).json(buscarPrestamos(req.params.idsocio));  
     }   
@@ -190,69 +166,102 @@ app.get('/socios/:idsocio/prestamos', function(req,res){
 
 /*actualiza*/
 app.put('/libros/:idlibro', function(req,res){
-    if(buscarIdLibro(req.params.idlibro) != 0){
-        res.status(400);
-        res.send("No se puede actualizar la cantidad de libros");
+    if(buscarPorId(req.params.idlibro, libros) != 0){
+        res.status(400).json({
+            message: "No se encuentra el id del libro ingresado"
+        });
     }else{
-        actualizarCantidad(req.params.idlibro,req.body.cantidad);
-        res.status(204).json(libros); 
+        if(actualizarCantidad(req.params.idlibro,req.body.cantidad) == 0){
+            res.status(204).json({
+                message: "Se actualizo correctamente la cantidad del libro"
+            });
+        }else{
+            res.status(400).json({
+                message: "No se puede actualizar la cantidad de libros, es menor a la cantidad de libros prestados"
+            });
+        }
     }
 })
 
 /*coloca nuevo*/
 app.post('/socios', function(req,res){
-    socios.push(new Socio(req.body.id, req.body.nombre));    
-    res.json(socios);
-    res.status(201);
+    if(req.body.id == null || req.body.nombre == null){
+        res.status(400).json({
+            message: "Datos incompletos"
+        });
+    } else{
+        socios.push(new Socio(req.body.id, req.body.nombre));    
+        res.status(201).json(socios);
+    }
 })
 
 app.post('/libros', function(req,res){
-    libros.push(new Libro(req.body.id, req.body.nombre,req.body.cantidad));
-    res.status(201);    
-    res.json(libros);
+    if(req.body.id == null || req.body.nombre == null || req.body.cantidad < 0 || req.body.cantidad == null){
+        res.status(400).json({
+            message: "Datos incompletos"
+        });
+    } else{
+        libros.push(new Libro(req.body.id, req.body.nombre,req.body.cantidad));
+        res.status(201).json(libros);
+    }
 })
 
 /*Registrar un préstamo de un libro a un socio.*/
 app.post('/prestamos', function(req,res){
-    if(disponibleLibro(req.body.idLibro) > 0 && librosAdeudados(req.body.idSocio) == 0){
+    if(disponibleLibro(req.body.idLibro) > 0){
+        if(librosAdeudados(req.body.idSocio) == 0){
         prestamos.push(new Prestamo(req.body.id, req.body.idLibro, req.body.idSocio, req.body.dias));
-        res.status(201);
-        res.json(prestamos);
+        res.status(201).json({
+            message: "El prestamo se registro correctamente"
+        });
+        }else{
+            res.status(400).json({
+                message: "El socio adeuda libros"
+            });
+        }
     }
     else{
-        res.status(404);
-        res.send("No se puede realizar el prestamo");
+        res.status(400).json({
+            message: "No hay libros disponibles"
+        });
     }  
 })
 
 /* Un socio puede devolver un libro prestado*/
 app.delete('/prestamos/:idSocio/:idLibro',function(req,res){
-    if(buscarIdSocio(req.params.idSocio) != 0 || buscarIdLibro(req.params.idLibro) != 0){
-        res.status(400);
-        res.send("No se puede borrar el prestamo, no existe");
+    if(buscarPorId(req.params.idSocio, socios) != -1 || buscarPorId(req.params.idLibro, libros) != -1){
+        borrarPrestamo(req.params.idSocio, req.params.idLibro);
+            res.status(200).json({
+                message: "Se elimino correctamente el prestamo"
+            });
     }else{
-        if(borrarPrestamo(req.params.idSocio, req.params.idLibro)){
-            res.status(204).send("Se elimino el prestamo");
-        }else{
-            res.status(400).send("No se puede eliminar el prestamo");
-        }              
+        res.status(404).json({
+            message: "No se puede borrar el prestamo, no existe"
+        });             
     }   
 })
 
-app.delete('/libros/:id',function(req,res){
-    if(buscarIdLibro(req.params.id) != 0){
-        res.status(400).send("No se puede eliminar el libro");
-    } else{
-        if(borrarLibro(req.params.id)){            
-            res.status(204).send("Se elimino el libro");
+app.delete('/libros/:idLibro',function(req,res){
+    if(buscarPorId(req.params.idLibro, libros) != -1){        
+        if(controlarPrestamosLibros(req.params.idLibro) == 0){ 
+            borrarLibros(req.params.idLibro);
+            res.status(200).json({
+                message: "Se elimino correctamente el libro"
+            });
         }else{
-            res.status(400).send("No se puede eliminar el libro");
-        }        
+            res.status(404).json({
+                message: "No se puede eliminar el libro porque hay prestados"
+            });
+        }  
+    } else{
+        res.status(404).json({
+            message: "No se puede eliminar el libro porque no existe"
+        });  
     }
 })
 
-var server = app.listen(8080, '127.0.0.1', function() {
+var server = app.listen(8080, '127.0.0.1', function () {
     var host = server.address().address
     var port = server.address().port
-    console.log("app corriendo en: http://%s:%s", host, port)
-})
+    console.log("Example app listening at http://%s:%s", host, port)
+  })
