@@ -1,6 +1,7 @@
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
+var sql = require('mysql');
 
 app.use(bodyParser.json());
 const MILISEGUNDOS = 1000*60*60*24;
@@ -102,20 +103,6 @@ function buscarPorId(idAux, coleccion){
     }
     return existe;
 }
-
-//TODO valores utilizados como prueba hasta que coloque la base de datos
-var libros = new Array();
-var socios = new Array();
-var prestamos = new Array();
-
-libros.push(new Libro(1, "Libro 1", 1));
-libros.push(new Libro(2, "Libro 2", 5));
-
-socios.push(new Socio(1, "Socio 1"));
-socios.push(new Socio(2, "Socio 2"));
-
-prestamos.push(new Prestamo(1, 1, 1, 5));
-prestamos.push(new Prestamo(2, 2, 2, 10));
 
 app.get('/socios', function(req,res){
     res.status(200).json(socios);    
