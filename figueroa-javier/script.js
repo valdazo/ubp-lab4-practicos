@@ -2,9 +2,7 @@ var express=require("express");
 var app=express();
 var bodyParser=require('body-parser');
 
-var server= app.listen(8080,'127.0.0.1' ,function(){
-console.log("Example")
-})
+var server= app.listen(8080,'127.0.0.1' ,function(){});
 /*---------------------------------------------------*/
 
 var socios=new Array();
@@ -13,14 +11,21 @@ var libros=new Array();
 
 const DIA_EN_MILISEG=1000*60*60*24;
 
-function getNewId(){
-return Math.random().toString(36).substr(2,9);}
-function encontrarIndicePorId(coleccion,idABuscar){
-	function esElId(elemento){
-		return elemento.id==idABuscar;}
+function getNewId()
+{
+	return Math.random().toString(36).substr(2,9);
 }
 
-function Socio(nombre,id){
+function encontrarIndicePorId(coleccion,idABuscar)
+{
+	function esElId(elemento)
+	{
+		return elemento.id==idABuscar;
+	}
+}
+
+function Socio(nombre,id)
+{
 	this.nombre=nombre;
 	this.id=id;
 }
@@ -33,24 +38,32 @@ function Prestamo(id,id_libro,titulo_libro,nombre_socio,dias)
 	this.nombre_socio=nombre_socio;
 	this.fechaVencimiento=Date.now()+DIA_EN_MILISEG*dias;
 }
-function Libro(titulo_libro,cantidad,id_libro){
+
+function Libro(titulo_libro,cantidad,id_libro)
+{
 	this.titulo_libro=titulo_libro;
 	this.cantidad=cantidad;
 	this.id_libro=id_libro;
-	this.disponibles=function (prestamos){
+	this.disponibles=function (prestamos)
+	{
 		var count=0;
-		for(const prest of prestamos){
-			if(prest.id_libro==id){
+		for(const prest of prestamos)
+		{
+			if(prest.id_libro==id)
+			{
 				count++;
 			}
 		}
 		return this.cantidad-count;
+	}
 }
-}
+
 function Eliminarlibro(id){
-	for(var i=0;i<libros.length;i++){
+	for(var i=0;i<libros.length;i++)
+	{
 		console.log(libros[i]);
-		if(id==libros[i].id_libro){
+		if(id==libros[i].id_libro)
+		{
 			libros.splice(i,1);
 			return true;
 		}
@@ -59,59 +72,83 @@ function Eliminarlibro(id){
 }
 
 function EliminarSocio(id){
-	for(var i=0;i<socios.length;i++){
-		if(id==socios[i].id){
+	for(var i=0;i<socios.length;i++)
+	{
+		if(id==socios[i].id)
+		{
 			socios.splice(i,1);
 				return true;
 		}
 	}
 	return false;
 }
-function Buscarlibro(id_lib){
-	for(var i=0;i<libros.length;i++){
-		if(id_lib==libros[i].id_libro){
+
+function Buscarlibro(id_lib)
+{
+	for(var i=0;i<libros.length;i++)
+	{
+		if(id_lib==libros[i].id_libro)
+		{
 			return true;
 			
 		}
 	}
+	return false;
 }
-function Actualizarlibro(id_lib,cant){
-	for(var i=0;i<libros.length;i++){
-		if(id_lib==libros[i].id_libro){
+
+function Actualizarlibro(id_lib,cant)
+{
+	for(var i=0;i<libros.length;i++)
+	{
+		if(id_lib==libros[i].id_libro)
+		{
 			libros[i].cantidad=cant;
 			return true;
 		}
 	}
 	return false;
 }
-function DevolverLibro(id,id_Libro){
-    for (var i = 0; i < prestamos.length; i++) {
-        if(prestamos[i].id==id && prestamos[i].id_libro==id_libro){
-            console.log("Libro encontrado");
+
+function DevolverLibro(id,id_Libro)
+{
+	for (var i = 0; i < prestamos.length; i++)
+	{
+		if(prestamos[i].id==id && prestamos[i].id_libro==id_libro)
+		{
             prestamos.splice(i,1);
             return true;
         }
     }
     return false;
 }
-function A_devolver(nom_socio){
+
+function A_devolver(nom_socio)
+{
     var fecha_prest=new Array();
-    for (var i = 0; i < prestamos.length; i++) {
-        if(nom_socio==prestamos[i].nombre_socio){
+	for (var i = 0; i < prestamos.length; i++)
+	{
+		if(nom_socio==prestamos[i].nombre_socio)
+		{
             fecha_prest.push(new Date(prestamos[i].fechavencimiento));
         }
     }
-    for (var i = 0; i < fecha_prest.length; i++) {
-        if(Date.now()>fecha_prest[i]){
+	for (var i = 0; i < fecha_prest.length; i++) 
+	{
+		if(Date.now()>fecha_prest[i])
+		{
             return true;
         }
     }
     return false;
 }
-function GetPrestamos(idSocio){
+
+function GetPrestamos(idSocio)
+{
     var prest=new Array();
-    for (var i = 0; i < prestamos.length; i++) {
-        if(id==prestamos[i].idSocio){
+	for (var i = 0; i < prestamos.length; i++) 
+	{
+		if(id==prestamos[i].idSocio)
+		{
             prest.push({"idLibro":prestamos[i].id_libro ,"Fecha Vencimiento":new Date(prestamos[i].fechavencimiento)});
         }
     }
@@ -131,52 +168,67 @@ prestamos.push(new Prestamo(4545,2,"SAPOS DE LA MEMORIA","Figueroa Javier",05));
 prestamos.push(new Prestamo(4547,5,"ANIMALES FANTASTICOS","Pedraza Pedro",09));
 
 app.use(bodyParser.json()); 
-app.get("/socios/",function(req,res){
+
+app.get("/socios/",function(req,res)
+{
 	res.status(200);
 	res.json([socios]);
 })
 
-app.post("/socios/",function(req,res){
+app.post("/socios/",function(req,res)
+{
 	socios.push(new Socio(req.body.nombre,getNewId()));
 	res.status(201);
 	res.json();
 })
-app.get("/libros/",function(req,res){
+
+app.get("/libros/",function(req,res)
+{
 	res.status(200);
 	res.json([libros]);
 })
-app.post("/libros/",function(req,res){
+
+app.post("/libros/",function(req,res)
+{
 	libros.push(new Libro(req.body.titulo_libro,req.body.cantidad,getNewId()));
 	res.status(201);
 	res.json();
 })
-app.get("/prestamos/",function(req,res){
+
+app.get("/prestamos/",function(req,res)
+{
 	res.status(200);
 	res.json([prestamos]);
 })
-app.post("/prestamos/",function(req,res){
+
+app.post("/prestamos/",function(req,res)
+{
 	prestamos.push(new Prestamo(getNewId(),req.body.id_libro,req.body.titulo_libro,req.body.nombre_socio,req.body.dias));
 	res.status(201);
 	res.json();
-	
 })
-app.delete("/libros/:id_libro",function(req,res){
-	if(Eliminarlibro(req.params.id_libro)){
+
+app.delete("/libros/:id_libro",function(req,res)
+{
+	if(Eliminarlibro(req.params.id_libro))
+	{
 		res.status(200);
 		res.json("EL LIBRO SE HA ELIMINADO CORRECTAMENTE: ");
 	}
-	else{
+	else
+	{
 		res.status(400);
 		res.json("EL LIBRO NO SE HA ELIMINADO O NO SE ENCUENTRA DISPONIBLE: ");
 	}
 })
 
-app.put("/libros/:idlibro",function(req,res){
-	if(Actualizarlibro(req.params.idlibro,req.body.cantidad)){
+app.put("/libros/:idlibro",function(req,res)
+{
+	if(Actualizarlibro(req.params.idlibro,req.body.cantidad))
+	{
 		res.status(200);
 		res.json(Buscarlibro(req.params.idlibro));
-		console.log("Se encontro el libro y se ha modificado la cantidad");
-		}
+	}
 	else
 	{
 		res.status(404)
@@ -184,13 +236,16 @@ app.put("/libros/:idlibro",function(req,res){
 	}
 })
 
-app.delete('/prestamos/:idsocio/:idlibro',function(req,res){
-    if(DevolverLibro(req.params.idSocio,req.params.id_libro)){
+app.delete('/prestamos/:idsocio/:idlibro',function(req,res)
+{
+	if(DevolverLibro(req.params.idSocio,req.params.id_libro))
+	{
 		res.status(200)
 		res.json("A devuelto el libro");
         console.log(prestamos);
     }
-    else{
+	else
+	{
 		res.status(400);
 		res.json("ERROR EN LA OPERACION")
     }
