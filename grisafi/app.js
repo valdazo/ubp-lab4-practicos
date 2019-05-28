@@ -1,9 +1,21 @@
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
+var mysql = require ('mysql');
 app.use(bodyParser.json());
 
 const DIA_EN_MILISEGUNDOS = 1000 * 60 * 60 * 24;
+
+var con = mysql.createConnection({
+    host: "localhost",
+    user: "gonzalo",
+    password: "gonzalo123"
+});
+
+con.connect(function(err){
+    if (err) throw err;
+    console.log("Connected!");
+})
 
 var libros = new Array();
 var socios = new Array();
