@@ -132,7 +132,7 @@ module.exports = {
       if (book) {
         if (book.inventory > 0) {
           if (partner) {
-            if (!db.hasBedt(Pid, time.getTime())) {
+            if (!db.hasDebt(Pid, time.getTime())) {
               console.log(`POST /loans/lent OK`);
               db.lentBook(Pid, Bid, time.getTime(10));
               res.status(200).json({ message: "Book lent.", expiration_date: time.getTime(10) });

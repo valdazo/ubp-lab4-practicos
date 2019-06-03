@@ -71,7 +71,7 @@ let deleteBook = id => {
 }
 
 // booleano que indica si se le venció una deuda a un partner
-let hasBedt = (id, time) => {
+let hasDebt = (id, time) => {
   let debt = false;
   getTable("loans").forEach(loan => {
     if (loan.partner == id && loan.expiration_date < time) {
@@ -125,7 +125,7 @@ module.exports = {
   getBook,
   addBook,
   deleteBook,
-  hasBedt,
+  hasDebt,
   lentBook,
   returnBook,
   isLoan
