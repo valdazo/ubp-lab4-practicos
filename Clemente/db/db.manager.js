@@ -63,8 +63,15 @@ let addBook = (id) => {
 
 let deleteBook = id => {
   getTable("books").forEach(book => {
-    if (book.id == id && book.inventory != 0) {
-      book["inventory"] -= 1;
+    if (book.id == id) {
+      if(book.inventory > 0) {
+        book["inventory"] -= 1;
+        console.log(`book ${id} inventory-=1`);
+      }
+      if (book.inventory == 0) {
+        console.log(`book ${id} deleted`);
+        json["books"].splice(id-1, 1);
+      }
     }
   });
   save();
@@ -83,34 +90,39 @@ let hasDebt = (id, time) => {
 
 let lentBook = (Pid, Bid, expiration) => {
   addEntry("loans", { partner: Pid, book: Bid, expiration_date: expiration });
-  getTable("books").forEach(book => {
-    if(book.id == Bid) {
-      book.inventory-=1;
-    }
-  });
   save();
 }
 
 let returnBook = (Pid, Bid) => {
-  let i=0;
+  let i = 0;
   getTable("loans").forEach(loan => {
-    if(loan.partner == Pid && loan.book == Bid){
+    if (loan.partner == Pid && loan.book == Bid) {
       json["loans"].splice(i, 1);
     }
     i++;
   });
   getTable("books").forEach(book => {
-    if(book.id == Bid) {
-      book.inventory+=1;
+    if (book.id == Bid) {
+      book.inventory += 1;
     }
   });
   save();
 }
 
+let howMuchLoans = (Bid) => {
+  let r = 0;
+  getTable("loans").forEach(loan => {
+    if (loan.book == Bid) {
+      r++;
+    }
+  });
+  return r;
+}
+
 let isLoan = (Pid, Bid) => {
   let r = false;
   getTable("loans").forEach(loan => {
-    if(loan.partner == Pid && loan.book == Bid){
+    if (loan.partner == Pid && loan.book == Bid) {
       r = true;
     }
   });
@@ -128,5 +140,6 @@ module.exports = {
   hasDebt,
   lentBook,
   returnBook,
-  isLoan
+  isLoan,
+  howMuchLoans
 }

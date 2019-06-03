@@ -50,7 +50,7 @@ module.exports = {
       if (partner) {
         console.log(`DELETE /partners/${id} OK`);
         db.deletePartner(id);
-        res.status(200).json({ message: "Deleted." });
+        res.status(204).json({ message: "Deleted." });
       } else {
         console.log(`DELETE /partners/${id} NOT FOUND`);
         res.status(404).json({ message: "The partner doesn't exist" });
@@ -105,13 +105,14 @@ module.exports = {
     let book = db.getBook(id);
 
     if (book != null) {
-      if (book.inventory != 0) {
+      let loans = db.howMuchLoans(id);
+      if (book.inventory > loans || loans == 0) {
         console.log(`DELETE /books/${id} OK`);
-        res.status(200).json({ message: "Deleted" });
         db.deleteBook(id);
+        res.status(200).json({ message: "Deleted." });
       } else {
-        console.log(`DELETE /books/${id} EMPTY`);
-        res.status(404).json({ message: "The inventory of this book is empty." });
+        console.log(`DELETE /books/${id} HAS LOANS`);
+        res.status(403).json({ message: "The book has loans." });
       }
     } else {
       console.log(`DELETE /books/${id} NOT FOUND`);
@@ -128,21 +129,32 @@ module.exports = {
     let { Pid } = req.body;
     let book = db.getBook(Bid);
     let partner = db.getPartner(Pid);
-    if (valid.id(Pid) && valid.id(Bid) && valid.string(book) && valid.string(partner)) {
+    if (valid.id(Pid) && valid.id(Bid)) {
       if (book) {
         if (book.inventory > 0) {
-          if (partner) {
-            if (!db.hasDebt(Pid, time.getTime())) {
-              console.log(`POST /loans/lent OK`);
-              db.lentBook(Pid, Bid, time.getTime(10));
-              res.status(200).json({ message: "Book lent.", expiration_date: time.getTime(10) });
+          let loans = db.howMuchLoans(Bid);
+          if (book.inventory > loans) {
+            if (partner) {
+              if (!db.hasDebt(Pid, time.getTime())) {
+                if (!db.isLoan(Pid, Bid)) {
+                  console.log(`POST /loans/lent OK`);
+                  db.lentBook(Pid, Bid, time.getTime(10));
+                  res.status(200).json({ message: "Book lent.", expiration_date: time.getTime(10) });
+                } else {
+                  console.log(`POST /loans/lent ALREADY LENT`);
+                  res.status(400).json({ message: "The partner has already lent that book." });
+                }
+              } else {
+                console.log(`POST /loans/lent OVERDUE DEBTS`);
+                res.status(400).json({ message: "The partner has overdue debts." });
+              }
             } else {
-              console.log(`POST /loans/lent OVERDUE DEBTS`);
-              res.status(400).json({ message: "The partner has overdue debts." });
+              console.log(`POST /loans/lent PARTNER NOT FOUND`);
+              res.status(404).json({ message: "The partner doesn't exist." });
             }
           } else {
-            console.log(`POST /loans/lent PARTNER NOT FOUND`);
-            res.status(404).json({ message: "The partner doesn't exist." });
+            console.log(`POST /loans/lent ALL LOAN`);
+            res.status(403).json({ message: "All copies of this book are on loan." });
           }
         } else {
           console.log(`POST /loans/lent EMPTY`);
@@ -189,7 +201,7 @@ module.exports = {
   ///////////////////////////////////////// TESTING ////////////////////////////////////
   modifyTime: (req, res) => {
     let { days } = req.body;
-    if(valid.id(days)) {
+    if (valid.id(days)) {
       time.modifyTime(days);
       res.status(200).json({ message: "Time changed.", new_time: time.getTime() });
     } else {
