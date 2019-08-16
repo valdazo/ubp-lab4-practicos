@@ -13,28 +13,6 @@ GET url/libros
     }
 ]
 
---Obtener la cantidad disponibles de un libro
-
-*Request*
-GET url/libros/:idlibro
-
-Params key: idlibro
-       value: 2
-
-*Response*
- Status: 200 OK
- <"cantidad">
-
- Params key: idlibro
-       value: 3
-
-*Response*
-Status: 404 Not Found  
-{
-    "message": "No se encuentra el id del libro ingresado"
-}
-
-
 --Obtener Socios
 
 *Request*
@@ -42,6 +20,8 @@ Status: 404 Not Found
 GET url/socios
 
 *Response*
+
+    Status: 200 OK
 [
     {
         "id": <"id">,
@@ -87,12 +67,24 @@ Status: 200 OK
 ]
 
 Params key: idSocio
+       value: 3
+
+*Response*
+Status: 200 OK
+
+[
+    {
+        "No tiene prestamos": 0
+    }
+]
+
+Params key: idSocio
        value: 8
 
 *Response*
 Status: 404 Not Found
 {
-    "message": "No se encuentra el id del libro ingresado"
+    "message": "No existe el socio solicitado"
 }
 
 
@@ -112,6 +104,7 @@ Body:
 }
 
 *Response*
+Status: 400
 
 {
     "message": "No se puede actualizar la cantidad de libros, es menor a la cantidad de libros prestados"
@@ -141,6 +134,7 @@ Body:
 	"cantidad":  <"cantidad">
 }
 
+*Response*
 Status: 400
 {
     "message": "No se encuentra el id del libro ingresado"
@@ -174,11 +168,23 @@ Body:
 }
 
 *Response*
+Status: 400 Bad Request
 
 {
     "message": "Datos incompletos"
 }
 
+Body:
+{
+	"id": 3, 
+	"nombre": "Socio 3"
+}
+
+*Response*
+Status: 400 Bad Request
+{
+    "message": "El socio ya existe"
+}
 
 --Agrega nuevo libro
 
@@ -209,7 +215,7 @@ Body:
 }
 
 *Response*
-
+Status: 400 Bad Request
 {
     "message": "Datos incompletos"
 }
@@ -248,6 +254,7 @@ body
 }
 
 *Response*
+Status: 400 Bad Request
 {
     "message": "No hay libros disponibles"
 }
@@ -261,8 +268,21 @@ body
 }
 
 *Response*
+Status: 400 Bad Request
 {
     "message": "El socio adeuda libros"
+}
+
+*Response*
+Status: 404 Not Found
+{
+    "message": "No existe el socio"
+}
+
+*Response*
+Status: 404 Not Found
+{
+    "message": "No existe el libro"
 }
 
 
@@ -270,7 +290,7 @@ body
 
 *Request*
 
-DELETE url/prestamos/:idSocio/:idLibro
+DELETE url/prestamos/:idPrestamo
 
 Params key: :idPrestamo
         value: 1
@@ -285,7 +305,7 @@ Params key: :idPrestamo
         value: 1
 
 *Response*
-Status: 404
+Status: 404 Not Found
 
 {
     "message": "No se puede borrar el prestamo, no existe"
@@ -316,4 +336,15 @@ Status: 200
 Body:
     {
     "message": "Se elimino correctamente el libro"
+}
+
+*Request*
+Params: key: idLibro
+        value: 2
+
+*Response*
+Status: 404 Not Found
+Body:
+    {
+    "message": "No se puede eliminar el libro porque no existe"
 }

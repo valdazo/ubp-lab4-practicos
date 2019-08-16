@@ -1,7 +1,6 @@
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
-var sql = require('mysql');
 
 app.use(bodyParser.json());
 const MILISEGUNDOS = 1000*60*60*24;
@@ -73,6 +72,7 @@ function actualizarCantidad(idL, cant){
 
 function buscarPrestamos(idS){
     var aux = new Array();
+    aux.push({"Prestamos":0});
     for(let i=0; i < prestamos.length; i++){
         if(idS == prestamos[i].idSocio){
             aux.push({"idLibro":prestamos[i].idLibro, 
@@ -104,6 +104,20 @@ function buscarPorId(idAux, coleccion){
     return existe;
 }
 
+//TODO valores utilizados como prueba hasta que coloque la base de datos
+var libros = new Array();
+var socios = new Array();
+var prestamos = new Array();
+
+libros.push(new Libro(1, "Libro 1", 1));
+libros.push(new Libro(2, "Libro 2", 5));
+
+socios.push(new Socio(1, "Socio 1"));
+socios.push(new Socio(2, "Socio 2"));
+
+prestamos.push(new Prestamo(1, 1, 1, 5));
+prestamos.push(new Prestamo(2, 2, 2, 10));
+
 app.get('/socios', function(req,res){
     res.status(200).json(socios);    
 })
@@ -111,17 +125,6 @@ app.get('/socios', function(req,res){
 /*para tener todos los libros*/
 app.get('/libros', function(req,res){
     res.status(200).json(libros);      
-})
-
-app.get('/libros/:idlibro', function(req,res){   
-    if (buscarPorId(req.params.idlibro, libros)){
-        res.status(200).json(disponibleLibro(req.params.idlibro)); 
-    } else{
-        res.status(404).json({
-            message: "No se encuentra el id del libro ingresado"
-        });
-    }
-     
 })
 
 app.get('/prestamos', function(req,res){
@@ -133,8 +136,8 @@ app.get('/socios/:idsocio/prestamos', function(req,res){
     if(buscarPorId(req.params.idsocio, socios)){
         res.status(200).json(buscarPrestamos(req.params.idsocio));
     }else{
-        res.status(404).json({
-            message: "No se puede obtener los libros prestados al socio"
+        res.status(400).json({
+            message: "No existe el socio solicitado"
         });
     }   
 })
@@ -166,8 +169,15 @@ app.post('/socios', function(req,res){
             message: "Datos incompletos"
         });
     } else{
-        socios.push(new Socio(req.body.id, req.body.nombre));    
-        res.status(201).json(socios);
+        if(!buscarPorId(req.body.id, socios)){
+            socios.push(new Socio(req.body.id, req.body.nombre));    
+            res.status(201).json(socios);
+        }else{
+            res.status(400).json({
+                message: "El socio ya existe"
+            });
+        }
+        
     }
 })
 
@@ -184,23 +194,36 @@ app.post('/libros', function(req,res){
 
 /*Registrar un préstamo de un libro a un socio.*/
 app.post('/prestamos', function(req,res){
-    if(disponibleLibro(req.body.idLibro) > 0){
-        if(!librosAdeudados(req.body.idSocio)){
-        prestamos.push(new Prestamo(req.body.id, req.body.idLibro, req.body.idSocio, req.body.dias));
-        res.status(201).json({
-            message: "El prestamo se registro correctamente"
-        });
-        }else{
-            res.status(400).json({
-                message: "El socio adeuda libros"
+    if(buscarPorId(req.body.idSocio, socios)){
+        if(buscarPorId(req.body.idLibro, libros)){
+            if(disponibleLibro(req.body.idLibro) > 0){
+                if(!librosAdeudados(req.body.idSocio)){
+                prestamos.push(new Prestamo(req.body.id, req.body.idLibro, req.body.idSocio, req.body.dias));
+                res.status(201).json({
+                    message: "El prestamo se registro correctamente"
+                });
+                }else{
+                    res.status(400).json({
+                        message: "El socio adeuda libros"
+                    });
+                }
+            }
+            else{
+                res.status(400).json({
+                    message: "No hay libros disponibles"
+                });
+            } 
+        } else{
+            res.status(404).json({
+                message: "No existe el libro"
             });
         }
-    }
-    else{
-        res.status(400).json({
-            message: "No hay libros disponibles"
+    } else{
+        res.status(404).json({
+            message: "No existe el socio"
         });
-    }  
+    }
+    
 })
 
 /* Un socio puede devolver un libro prestado*/
@@ -225,7 +248,7 @@ app.delete('/libros/:idLibro',function(req,res){
                 message: "Se elimino correctamente el libro"
             });
         }else{
-            res.status(404).json({
+            res.status(400).json({
                 message: "No se puede eliminar el libro porque hay prestados"
             });
         }  
@@ -240,4 +263,4 @@ var server = app.listen(8080, '127.0.0.1', function () {
     var host = server.address().address
     var port = server.address().port
     console.log("Example app listening at http://%s:%s", host, port)
-  })
+})
