@@ -1,9 +1,9 @@
 module.exports = {
     //devuelve la cantidad de ejmplares prestados de un libro
-    librosPrestados: (idLibro) => {
+    librosPrestados: (bookID,loansCollection) => {
         let cont = 0;
-        for (let i = 0; i < prestamos.length; i++) {
-            if (prestamos[i].idLibro == idLibro) {
+        for (let i = 0; i < loansCollection.length; i++) {
+            if (loansCollection[i].bookID == bookID) {
                 cont++;
             }
         }
@@ -11,11 +11,14 @@ module.exports = {
     },
 
     //actualiza la cantidad de ejemplares de un libro
-    updateBook: (bookID, cantidad) => {
-        if (cantidad >= librosPrestados(bookID)) {
-            for (let i = 0; i < libros.length; i++) {
-                if (bookID == libros[i].id) {
-                    libros[i].cantidad = cantidad;
+    updateBook: (bookID, amount, booksCollection,loansCollection) => {
+        if (amount<0){
+            return -1
+        }
+        if (amount >= module.exports.librosPrestados(bookID,loansCollection)) {
+            for (let i = 0; i < booksCollection.length; i++) {
+                if (bookID == booksCollection[i].id) {
+                    booksCollection[i].amount = amount;
                     return 1;
                 }
             }
@@ -47,9 +50,9 @@ module.exports = {
     },
 
     //devuelve true si el libro fue prestado, false si no lo fue
-    checkPrestado: (idLibro) => {
-        for (let i = 0; i < prestamos.length; i++) {
-            if (prestamos[i].idLibro == idLibro) {
+    checkPrestado: (idLibro,loans) => {
+        for (let i = 0; i < loans.length; i++) {
+            if (loans[i].idLibro == idLibro) {
                 return true;
             }
         }
@@ -57,11 +60,11 @@ module.exports = {
     },
 
     //elimina un libro
-    deleteBook: (id) => {
-        if (checkPrestado() == 0) {
-            for (let i = 0; i < libros.length; i++) {
-                if (id == libros[i].id) {
-                    libros.splice(i, 1);
+    deleteBook: (id,books,loans) => {
+        if (module.exports.checkPrestado(id,loans) == 0) {
+            for (let i = 0; i < books.length; i++) {
+                if (id == books[i].id) {
+                    books.splice(i, 1);
                     return 1;
                 }
             }
@@ -73,11 +76,11 @@ module.exports = {
     },
 
     //devuelve todos los prestamos
-    getPrestamos: (idSocio) => {
+    getLoansId: (memberId, loansCollection) => {
         let prest = new Array();
-        for (let i = 0; i < prestamos.length; i++) {
-            if (idSocio == prestamos[i].idSocio) {
-                prest.push({ "idLibro": prestamos[i].idLibro, "Fecha Vencimiento": new Date(prestamos[i].fechavencimiento) });
+        for (let i = 0; i < loansCollection.length; i++) {
+            if (memberId == loansCollection[i].memberId) {
+                prest.push({ "BookId": loansCollection[i].bookId, "Expiracy Date": new Date(loansCollection[i].expiracyDate) });
             }
         }
         return prest;
