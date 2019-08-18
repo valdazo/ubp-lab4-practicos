@@ -6,14 +6,14 @@ API manages a library's list of members, books and loans
 
 # Requests
 
-## Get /books/
+## Get */books/* 
 >Obtain all the books
->```
->127.0.0.1:8080/libros
+>```css
+>localhost:8080/books
 >```
 >#### Example Request
->>```curl
->>curl --location --request GET "127.0.0.1:8080/libros"
+>>```js
+>>curl --location --request GET "localhost:8080/libros"
 >>```
 >#### Example Response
 >>```json
@@ -33,17 +33,17 @@ API manages a library's list of members, books and loans
 >>}
 >>```
 
-## GET /books/:id
->```
->127.0.0.1:8080/books/:id
+## GET */books/:id*
+>```css
+>localhost:8080/books/:id
 >```
 >**Path Variables:**
->>```
+>>```css
 >>id:        id of the book to be searched
 >>```
 >#### Example Response:
->#### ***Case* 200 OK** 
->>```
+>- ***Case* 200 OK** 
+>>```json
 >>{
 >>    "data": {
 >>        "bookId": 10,
@@ -52,8 +52,8 @@ API manages a library's list of members, books and loans
 >>    }
 >>}
 >>```
->#### ***Case* 404 Not Found** 
->>```
+>- ***Case* 404 Not Found** 
+>>```json
 >>{
 >>    "error": {
 >>        "code": 404,
@@ -62,12 +62,12 @@ API manages a library's list of members, books and loans
 >>}
 >>```
 
-## POST /books/
->```
->127.0.0.1:8080/books
+## POST */books/*
+>```css
+>localhost:8080/books
 >```
 >#### Body
->>```
+>>```json
 >>{
 >>	"id":100,
 >>	"title":"Don Quijote",
@@ -75,18 +75,19 @@ API manages a library's list of members, books and loans
 >>}
 >>```
 >#### Example Request
->>```
->>curl --location --request POST "127.0.0.1:8080/books"
+>>```js
+>>curl --location --request POST "localhost:8080/books"
 >>```
 >#### Example Response
->>- 201 Created
+>>- **201 Created**
+>>>```json
 >>>{
 >>>    "status": "success",
 >>>    "message": "book added"
 >>>}
 >>>```
->>- 404 Bad Request
->>>```
+>>- **404 Bad Request**
+>>>```json
 >>>{
 >>>    "error": {
 >>>        "code": 404,
@@ -95,73 +96,175 @@ API manages a library's list of members, books and loans
 >>>}
 >>>```
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## GET /members/
->Obtain all the library's members
+## DELETE */book/*
+>```css
+>localhost:8080/books/:id
 >```
->127.0.0.1:8080/socios
+>#### Path Variables
+>>```css
+>>id: ID of the book to be deleted
+>>```
+>### **Example Request**
+>>```
+>>curl --location --request DELETE "localhost:8080/books/10" \
+>>```
+>### **Example Response**
+>>- **Case 200 OK**
+>>>```json
+>>>{
+>>>    "success": true,
+>>>    "message": "book deleted"
+>>>}
+>>>```
+>>- **404 Not Found**
+>>>```json
+>>>{
+>>>    "error": {
+>>>        "code": 404,
+>>>        "message": "book not found"
+>>>    }
+>>>}
+>>>```
+>>- **Case 403 Forbidden**
+>>>```json
+>>>{
+>>>    "error": {
+>>>        "code": 403,
+>>>        "message": "cannot delete the book due to there >>>are borrowed copies"
+>>>    }
+>>>}
+>>>```
+
+## PUT */books/:id*
+>```css
+>localhost:8080/libros/:idLibro
+>```
+>#### Path Variables
+>>```css
+>>id: ID of the book to update amount of copies
+>>```
+>#### Body
+>>```json
+>>{
+>>	"bookId":100,
+>>	"quantity":20
+>>}
+>>```
+>### Example Request
+>>```
+>>curl --location --request PUT "127.0.0.1:8080/libros/10"
+>>```
+>### Example Response
+>- **Case 200 OK**
+>>```json
+>>{
+>>    "status": "success",
+>>    "message": "amount of copies of book with id: {id} updated successfully"
+>>}
+>>```
+>- **Case 404 Not Found**
+>>```json
+>>{
+>>    "error": {
+>>        "code": 404,
+>>        "message": "book not found"
+>>    }
+>>}
+>>```
+>- **Case 403 Forbidden**
+>>```json
+>>{
+>>    "error": {
+>>        "code": 400,
+>>        "message": "wrong amount of books"
+>>    }
+>>}
+>>```
+
+## GET */members/*
+>Obtain all the library's members
+>```css
+>localhost:8080/members
 >```
 >#### Example Request
 >>```
 >>curl --location --request GET "127.0.0.1:8080/socios"
 >>```
->#### Example Response 200 OK
->>
->>```
->>[
->>  {
->>    "id": 1,
->>    "nombre": "A"
->>  },
->>  {
->>    "id": 2,
->>    "nombre": "B"
->>  }
->>]
+>#### Example Response 
+>- **200 OK**
+>>```json
+>>{
+>>    "data": [
+>>        {
+>>            "id": 1,
+>>            "name": "A"
+>>        },
+>>        {
+>>            "id": 2,
+>>            "name": "B"
+>>        }
+>>    ]
+>>}
 >>```
 
-## GET Socio Info
-```
-127.0.0.1:8080/socios/:idSocio
-```
-**Path Variables:**
-```
-idSocio	      <idSocio>
-	      ID del Socio a buscar
-```
-#### Example Request
-```
-curl --location --request GET "127.0.0.1:8080/socios/0"
-```
-#### *Case*: Socio Encontrado 200 OK
-```
-{
-  "id": 1,
-  "nombre": "A"
-}
-```
-#### *Case*: Socio No Encontrado 404 Not Found
-```
-"Socio no encontrado"
-```
+## GET */members/:id*
+>```
+>localhost:8080/members/:id
+>```
+>**Path Variables:**
+>>```css
+>>id: id of the member to search
+>>```
+>#### Example Request
+>>```
+>>curl --location --request GET "127.0.0.1:8080/members/0"
+>>```
+>### Example Response
+>- **Case 200 OK**
+>>```json
+>>{
+>>    "data": {
+>>        "id": 1,
+>>        "name": "A"
+>>    }
+>>}
+>>```
+>- **Case 404 Not Found**
+>>```json
+>>{
+>>    "error": {
+>>        "code": 404,
+>>        "message": "Member not found"
+>>    }
+>>}
+>>```
+
+## POST */member/*
+>```css
+>localhost:8080/socios
+>```
+>#### Body
+>>```json
+>>{
+>>	"id":3,
+>>	"name":"member 3"
+>>}
+>>```
+>#### Example Request
+>>```
+>>curl --location --request POST "127.0.0.1:8080/socios" \
+>>```
+>#### Example Response
+>- **201 Created**
+>>```json
+>>{
+>>    "data": {
+>>        "id": 3,
+>>        "name": "member 3"
+>>    },
+>>    "message": "Member with id 3 created successfully"
+>>}
+>>```
 
 
 
@@ -195,38 +298,7 @@ idSocio     <idSocio>
 ```
 "Socio No Encontrado"
 ```
-## POST Socio
-```
-127.0.0.1:8080/socios
-```
-#### Headers
-```
-Content-Type application/json
-```
-#### Body
-```
-{
-	"nombre": <nombre>,
-	"id": <cantidad>
-}
-```
-#### Example Request
-```
-curl --location --request POST "127.0.0.1:8080/socios" \
-  --header "Content-Type: application/json" \
-  --data "{
-    \"nombre\": \"Socio A\",
-    \"id\": 10
-}"
-```
-#### Example Response
-- 201 Created
-```
-{
-  "nombre": "Socio A",
-  "id": 10
-}
-```
+
 
 
 
@@ -268,36 +340,7 @@ curl --location --request POST "127.0.0.1:8080/prestamos" \
 ```
 "No hay ejemplares disponibles para prestamo"
 ```
-## DELETE Libro
-```
-127.0.0.1:8080/libros/:idLibro
-```
-#### Headers
-Content-Type application/json
 
-#### Path Variables
-```
-idLibro   <idLibro>
-	  ID del Libro a Eliminar
-```
-### Example Request
-```
-curl --location --request DELETE "127.0.0.1:8080/libros/10" \
-  --header "Content-Type: application/json"
-```
-### Example Response
-- Case Libro Encontrado 200 OK
-```
-Libro Eliminado
-```
-- Case Libro No Encontrado 404 Not Found
-```
-Libro No Encontrado
-```
-- Case Libro Prestado
-```
-No se puede eliminar el libro porque hay ejemplares prestados
-```
 ## DELETE Prestamo
 ```
 127.0.0.1:8080/prestamos/:idSocio/:idLibro
@@ -322,48 +365,5 @@ Libro devuelto
 - Case Error al Devolver el Libro 400 Bad Request
 ```
 La operacion no se pudo llevar a cabo
-```
-## PUT Libro
-```
-127.0.0.1:8080/libros/:idLibro
-```
-#### Headers
-Content-Type application/json
-#### Path Variables
-```
-idLibro      <idLibro>
-	     ID del libro a actualizar la cantidad de ejemplares
-```
-#### Body
-```
-{
-    "cantidad": 0
-}
-```
-
-### Example Request
-```
-curl --location --request PUT "127.0.0.1:8080/libros/10" \
-  --header "Content-Type: application/json" \
-  --data "{
-	\"cantidad\":100
-}"
-```
-### Example Response
-- Case Cantidad de Ejemplares Actualizada 200 OK
-```
-{
-  "id": 10,
-  "titulo": "Harry Potter",
-  "cantidad": 100
-}
-```
-- Case Libro No Encontrado 400 Bad Request
-```
-"Libro no encontrado"
-```
-- Case Cantidad nueva menor a la cantidad de libros prestados  400 Bad Request
-```
-Error: la cantidad de libros es menor a la cantidad de libros prestados"
 ```
 
