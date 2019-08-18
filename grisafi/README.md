@@ -12,7 +12,7 @@ API manages a library's list of members, books and loans
 >127.0.0.1:8080/libros
 >```
 >#### Example Request
->>```
+>>```curl
 >>curl --location --request GET "127.0.0.1:8080/libros"
 >>```
 >#### Example Response
