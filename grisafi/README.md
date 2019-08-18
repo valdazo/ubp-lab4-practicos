@@ -1,56 +1,141 @@
-# ubp-lab4-practicos
-
-# REST API BIBLIOTECA
+# REST API LIBRARY
 
 # About
 
 API manages a library's list of members, books and loans
 
-## Requests
+# Requests
 
-## Get Libros
-Obtain all the books
-```
-127.0.0.1:8080/libros
-```
-#### Example Request
-```
-curl --location --request GET "127.0.0.1:8080/libros"
-```
-#### Example Response
-```
-[
-  {
-    "id": 1,
-    "titulo": "A",
-    "cantidad":100,
-    "disponibles":10
-  },
-]
-```
-## GET Socios
-Obtain all the library's members
-```
-127.0.0.1:8080/socios
-```
-#### Example Request
-```
-curl --location --request GET "127.0.0.1:8080/socios"
-```
-#### Example Response 200 OK
+## Get /books/
+>Obtain all the books
+>```
+>127.0.0.1:8080/libros
+>```
+>#### Example Request
+>>```
+>>curl --location --request GET "127.0.0.1:8080/libros"
+>>```
+>#### Example Response
+>>{
+>>    "data": [
+>>        {
+>>            "id": 10,
+>>            "title": "Harry Potter",
+>>            "amount": 100
+>>        },
+>>        {
+>>            "id": 20,
+>>            "title": "Lord of the Rings",
+>>            "amount": 10
+>>        }
+>>    ]
+>>}
 
-```
-[
-  {
-    "id": 1,
-    "nombre": "A"
-  },
-  {
-    "id": 2,
-    "nombre": "B"
-  }
-]
-```
+## GET /books/:id
+>```
+>127.0.0.1:8080/books/:id
+>```
+>**Path Variables:**
+>>```
+>>id:        id of the book to be searched
+>>```
+>#### Example Response:
+>#### ***Case* 200 OK** 
+>>```
+>>{
+>>    "data": {
+>>        "bookId": 10,
+>>        "title": "Harry Potter",
+>>        "available": 100
+>>    }
+>>}
+>>```
+>#### ***Case* 404 Not Found** 
+>>```
+>>{
+>>    "error": {
+>>        "code": 404,
+>>        "message": "book not found"
+>>    }
+>>}
+>>```
+
+## POST /books/
+>```
+>127.0.0.1:8080/books
+>```
+>#### Body
+>>```
+>>{
+>>	"id":100,
+>>	"title":"Don Quijote",
+>>	"quantity":100
+>>}
+>>```
+>#### Example Request
+>>```
+>>curl --location --request POST "127.0.0.1:8080/books"
+>>```
+>#### Example Response
+>>- 201 Created
+>>>{
+>>>    "status": "success",
+>>>    "message": "book added"
+>>>}
+>>>```
+>>- 404 Bad Request
+>>>```
+>>>{
+>>>    "error": {
+>>>        "code": 404,
+>>>        "message": "there's already another book with that id"
+>>>    }
+>>>}
+>>>```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## GET /members/
+>Obtain all the library's members
+>```
+>127.0.0.1:8080/socios
+>```
+>#### Example Request
+>>```
+>>curl --location --request GET "127.0.0.1:8080/socios"
+>>```
+>#### Example Response 200 OK
+>>
+>>```
+>>[
+>>  {
+>>    "id": 1,
+>>    "nombre": "A"
+>>  },
+>>  {
+>>    "id": 2,
+>>    "nombre": "B"
+>>  }
+>>]
+>>```
+
 ## GET Socio Info
 ```
 127.0.0.1:8080/socios/:idSocio
@@ -75,30 +160,9 @@ curl --location --request GET "127.0.0.1:8080/socios/0"
 ```
 "Socio no encontrado"
 ```
-## GET Libros Disponibles
-```
-127.0.0.1:8080/libros/:idLibro
-```
-**Path Variables:**
-```
-idLibro        <idLibro>
-		ID del libro a consultar la cantidad 
-		de ejemplares disponibles
-```
-#### Example Response:
-#### ***Case* Libro Encontrado 200 OK** 
-200 OK
 
-```
-{
-  "idLibro": 10,
-  "disponibles": 98
-}
-```
-#### ***Case* Libro No Encontrado 404 Not Found** 
-```
-"Libro no encontrado"
-```
+
+
 ## GET prestamos socio
 Obtains all the loans made by a member
 ```
@@ -161,39 +225,9 @@ curl --location --request POST "127.0.0.1:8080/socios" \
   "id": 10
 }
 ```
-## POST libro
-```
-127.0.0.1:8080/libros
-```
-#### Headers
-Content-Type application/json
-#### Body
-```
-{
-    "nombre":	<nombre>,
-    "cantidad": <cantidad>,
-    "id":	<id>
-}
-```
-#### Example Request
-```
-curl --location --request POST "127.0.0.1:8080/libros" \
-  --header "Content-Type: application/json" \
-  --data "{
-	\"nombre\":\"Game of Thrones\",
-	\"cantidad\":20,
-	\"id\":4
-}"
-```
-#### Example Response
-- 201 Created
-```
-{
-  "nombre": "Game of Thrones",
-  "cantidad": 20,
-  "id": 4
-}
-```
+
+
+
 ## POST Prestamo
 ```
 127.0.0.1:8080/prestamos
