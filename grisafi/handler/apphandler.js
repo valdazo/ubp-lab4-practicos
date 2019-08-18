@@ -104,34 +104,47 @@ module.exports = {
             res.status(200).json(
                 {
                     data: {
-                        "BookId": parseInt(req.params.id), 
-                        "Availables": book.availables()
+                        "bookId": parseInt(req.params.id),
+                        "title": book.title,
+                        "available": book.availables()
                     }
                 });
         }
         else {
             res.status(404).json(
-                {error:{
-                    code:404,
-                    message:"Book not found"}});
+                {
+                    error: {
+                        code: 404,
+                        message: "book not found"
+                    }
+                });
         }
     },
 
     postBook: (req, res) => {
-        books.push(new Book(req.body.name, req.body.quantity, req.body.id));
-        res.status(201).json(
-            {
-                data: {
-                    id: req.body.id,
-                    name: req.body.name
-                },
-                message: "Book created successfully"
-            }
-        );
+        if (f.findID(req.body.id, books)==false) {
+            books.push(new Book(req.body.title, req.body.quantity, req.body.id));
+            res.status(201).json(
+                {
+                    status: "success",
+                    message: "book added"
+                }
+            );
+        }
+        else{
+            res.status(400).json(
+                {
+                    error:{
+                        code:404,
+                        message:"there's already another book with that id"
+                    }
+                }
+            )
+        }
     },
 
     deleteBook: (req, res) => {
-        let result = f.deleteBook(req.params.id,books,loans);
+        let result = f.deleteBook(req.params.id, books, loans);
         if (result) {
             res.status(200).json({
                 success: true,
@@ -158,11 +171,11 @@ module.exports = {
     },
 
     putBook: (req, res) => {
-        let result = f.updateBook(req.body.bookId, req.body.quantity,books,loans);
+        let result = f.updateBook(req.body.bookId, req.body.quantity, books, loans);
         if (result == 1) {
             res.status(200).json(
                 {
-                    status:"success",
+                    status: "success",
                     message: `amount of copies of book with id: ${req.body.bookId} updated successfully`
                 });
         }
@@ -196,9 +209,9 @@ module.exports = {
     getLoansMember: (req, res) => {
         console.log(`GET /loans/:id`);
         if (f.findID(req.params.id, members)) {
-            let prest = f.getLoansId(req.params.id,loans);
+            let prest = f.getLoansId(req.params.id, loans);
             if (prest.length == 0) {
-                res.status(204).json({message: `There are no loans made by member with id: ${req.params.id}`});
+                res.status(204).json({ message: `There are no loans made by member with id: ${req.params.id}` });
             }
             else {
                 res.status(200).json({ data: prest });

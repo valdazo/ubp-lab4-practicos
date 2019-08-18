@@ -1,5 +1,5 @@
 module.exports = {
-    //devuelve la cantidad de ejmplares prestados de un libro
+    //borrowedBooks returns the amount of copies of a book loaned
     borrowedBooks: (bookID,loansCollection) => {
         let cont = 0;
         for (let i = 0; i < loansCollection.length; i++) {
@@ -10,7 +10,7 @@ module.exports = {
         return cont;
     },
 
-    //actualiza la cantidad de ejemplares de un libro
+    //updateBook updates the amount of copies of a book
     updateBook: (bookID, amount, booksCollection,loansCollection) => {
         if (amount<0){
             return -1
@@ -29,7 +29,7 @@ module.exports = {
         }
     },
 
-    //encuentra el objeto libro/socio de acuerdo a su id
+    //findID finds the membeor of book by its id
     findID: (id, collection) => {
         for (let i = 0; i < collection.length; i++) {
             if (id == collection[i].id) {
@@ -39,7 +39,7 @@ module.exports = {
         return false;
     },
 
-    //retorna true si el socio debt libros, false si no debt
+    //debt returns true if member has books in debt, false if not
     debt: (memberId) => {
         for (let i = 0; i < loans.length; i++) {
             if (memberId == loans[i].memberId && loans[i].fechavencimiento < Date.now()) {
@@ -49,7 +49,7 @@ module.exports = {
         return false;
     },
 
-    //devuelve true si el libro fue prestado, false si no lo fue
+    //checkLoaned checks if books is in loan, returning true if it's true, false if it's not
     checkLoaned: (bookID,loans) => {
         for (let i = 0; i < loans.length; i++) {
             if (loans[i].bookID == bookID) {
@@ -59,7 +59,7 @@ module.exports = {
         return false;
     },
 
-    //elimina un libro
+    //deleteBook deletes a book
     deleteBook: (id,books,loans) => {
         if (module.exports.checkLoaned(id,loans) == 0) {
             for (let i = 0; i < books.length; i++) {
@@ -75,21 +75,23 @@ module.exports = {
         }
     },
 
-    //devuelve todos los loans
+    //getLoansId returns all the current loans by a member via his id
     getLoansId: (memberId, loansCollection) => {
         let prest = new Array();
         for (let i = 0; i < loansCollection.length; i++) {
             if (memberId == loansCollection[i].memberId) {
-                prest.push({ "BookId": loansCollection[i].bookId, "Expiracy Date": new Date(loansCollection[i].expiracyDate) });
+                prest.push({ "bookId": loansCollection[i].bookId, "expiracyDate": new Date(loansCollection[i].expiracyDate) });
             }
         }
         return prest;
     },
 
+    //generateLoansID generates an unique id for a loan
     generateLoansID: () => {
         return Math.random().toString(36).substr(2, 9);
     },
 
+    //returnBook eliminates an entry in loans structure
     returnBook: (loanId) => {
         for (let i = 0; i < loans.length; i++) {
             if (loans[i].id == loanId) {
