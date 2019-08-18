@@ -145,10 +145,10 @@ module.exports = {
 
     deleteBook: (req, res) => {
         let result = f.deleteBook(req.params.id, books, loans);
-        if (result) {
+        if (result==1) {
             res.status(200).json({
                 success: true,
-                message: "Book Deleted"
+                message: "book deleted"
             });
         }
         else if (result == -1) {
@@ -156,7 +156,7 @@ module.exports = {
                 {
                     error: {
                         code: 403,
-                        message: "Cannot delete the book due to there are borrowed copies"
+                        message: "cannot delete the book due to there are borrowed copies"
                     }
                 })
         }
@@ -164,7 +164,7 @@ module.exports = {
             res.status(404).json({
                 error: {
                     code: 404,
-                    message: "Book not found"
+                    message: "book not found"
                 }
             });
         }
@@ -180,7 +180,7 @@ module.exports = {
                 });
         }
         else if (result == -1) {
-            res.status(400).json(
+            res.status(403).json(
                 {
                     error: {
                         code: 400,

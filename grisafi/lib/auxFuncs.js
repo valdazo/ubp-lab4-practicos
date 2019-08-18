@@ -3,7 +3,7 @@ module.exports = {
     borrowedBooks: (bookID,loansCollection) => {
         let cont = 0;
         for (let i = 0; i < loansCollection.length; i++) {
-            if (loansCollection[i].bookID == bookID) {
+            if (loansCollection[i].bookId == bookID) {
                 cont++;
             }
         }
@@ -52,7 +52,7 @@ module.exports = {
     //checkLoaned checks if books is in loan, returning true if it's true, false if it's not
     checkLoaned: (bookID,loans) => {
         for (let i = 0; i < loans.length; i++) {
-            if (loans[i].bookID == bookID) {
+            if (loans[i].bookId == bookID) {
                 return true;
             }
         }
@@ -61,7 +61,7 @@ module.exports = {
 
     //deleteBook deletes a book
     deleteBook: (id,books,loans) => {
-        if (module.exports.checkLoaned(id,loans) == 0) {
+        if (module.exports.checkLoaned(id,loans) == false) {
             for (let i = 0; i < books.length; i++) {
                 if (id == books[i].id) {
                     books.splice(i, 1);
