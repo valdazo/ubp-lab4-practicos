@@ -16,6 +16,7 @@ API manages a library's list of members, books and loans
 >>curl --location --request GET "127.0.0.1:8080/libros"
 >>```
 >#### Example Response
+>>```json
 >>{
 >>    "data": [
 >>        {
@@ -30,6 +31,7 @@ API manages a library's list of members, books and loans
 >>        }
 >>    ]
 >>}
+>>```
 
 ## GET /books/:id
 >```
