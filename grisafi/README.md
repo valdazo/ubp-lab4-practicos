@@ -78,7 +78,16 @@ API manages a library's list of members, books and loans
 >>>    "message": "book added"
 >>>}
 >>>```
->>- **400 BAD REQUEST**
+>>- **400 Wrong Parameters BAD REQUEST**
+>>>```json
+>>>{
+>>>    "error": {
+>>>        "code": 400,
+>>>        "message": "wrong parameters"
+>>>    }
+>>>}
+>>>```
+>>- **400 Wrong ID BAD REQUEST**
 >>>```json
 >>>{
 >>>    "error": {
@@ -118,7 +127,7 @@ API manages a library's list of members, books and loans
 >>>{
 >>>    "error": {
 >>>        "code": 403,
->>>        "message": "cannot delete the book due to there >>>are borrowed copies"
+>>>        "message": "cannot delete the book due to there are borrowed copies"
 >>>    }
 >>>}
 >>>```
@@ -322,6 +331,15 @@ API manages a library's list of members, books and loans
 >>    }
 >>}
 >>```
+>- **Case Wrong Days**
+>>```json
+>>{
+>>    "error": {
+>>        "code": 400,
+>>        "message": "wrong number of days"
+>>    }
+>>}
+>>```
 >- **Case No Available Copies**
 >>```json
 >>{
@@ -331,7 +349,16 @@ API manages a library's list of members, books and loans
 >>    }
 >>}
 >>```
->- **Case 404 NOT FOUND**
+>- **Case 404 Member NOT FOUND**
+>>```json
+>>{
+>>    "error": {
+>>        "code": 404,
+>>        "message": "member not found"
+>>    }
+>>}
+>>```
+>- **Case 404 Book NOT FOUND**
 >>```json
 >>{
 >>    "error": {
@@ -343,9 +370,10 @@ API manages a library's list of members, books and loans
 
 
 
+
 ## DELETE Prestamo
-```
-127.0.0.1:8080/prestamos/:idSocio/:idLibro
+```css
+localhost:8080/prestamos/:idSocio/:idLibro
 ```
 #### Path Variables:
 ```
