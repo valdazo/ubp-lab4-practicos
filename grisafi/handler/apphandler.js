@@ -1,4 +1,5 @@
 let f = require('../lib/auxFuncs');
+let v = require('../lib/validators');
 
 const DIA_EN_MILISEGUNDOS = 1000 * 60 * 60 * 24;
 
@@ -72,7 +73,7 @@ module.exports = {
 
     postMember: (req, res) => {
         console.log("POST /members/")
-        if (req.body.name != null && req.body.id != null) {
+        if (req.body.name != null && v.validateId(req.body.id)) {
             members.push(new Member(req.body.name, req.body.id));
             res.status(201).json(
                 {
@@ -123,19 +124,29 @@ module.exports = {
 
     postBook: (req, res) => {
         if (f.findID(req.body.id, books) == false) {
-            books.push(new Book(req.body.title, req.body.quantity, req.body.id));
-            res.status(201).json(
-                {
-                    status: "success",
-                    message: "book added"
-                }
-            );
+            if (v.validateBook(req.body.title, req.body.quantity, req.body.id)) {
+                books.push(new Book(req.body.title, req.body.quantity, req.body.id));
+                res.status(201).json(
+                    {
+                        status: "success",
+                        message: "book added"
+                    }
+                );
+            }
+            else{
+                res.status(400).json({
+                    error:{
+                        code:400,
+                        message:"wrong parameters"
+                    }
+                })
+            }
         }
         else {
             res.status(400).json(
                 {
                     error: {
-                        code: 404,
+                        code: 400,
                         message: "there's already another book with that id"
                     }
                 }
@@ -180,7 +191,7 @@ module.exports = {
                 });
         }
         else if (result == -1) {
-            res.status(403).json(
+            res.status(400).json(
                 {
                     error: {
                         code: 400,
@@ -224,7 +235,25 @@ module.exports = {
     },
 
     postLoan: (req, res) => {
-        if (f.debt(req.body.memberId,loans)) {
+        if (f.findID(req.body.memberId, members) == false) {
+            res.status(404).json({
+                error: {
+                    code: 404,
+                    message: "member not found"
+                }
+            })
+        }
+
+        else if (!v.validateDays(req.body.days)) {
+            res.status(400).json({
+                error: {
+                    code: 400,
+                    message: "wrong number of days"
+                }
+            })
+        }
+
+        else if (f.debt(req.body.memberId, loans)) {
             res.status(400).json({
                 error: {
                     code: 400,
@@ -234,15 +263,15 @@ module.exports = {
         }
         else {
             let book = f.findID(req.body.bookId, books);
-            if (book==false){
+            if (book == false) {
                 res.status(404).json({
-                    error:{
-                        code:404,
-                        message:"book not found"
+                    error: {
+                        code: 404,
+                        message: "book not found"
                     }
                 })
             }
-            if (book.availables() > 0) {
+            else if (book.availables() > 0) {
                 loans.push(new Loan(f.generateLoansID(), req.body.memberId, req.body.bookId, req.body.days));
                 res.status(200).json({
                     success: true,
@@ -259,5 +288,8 @@ module.exports = {
                     })
             }
         }
-    }
+    },
+
+
+
 }
