@@ -133,11 +133,11 @@ module.exports = {
                     }
                 );
             }
-            else{
+            else {
                 res.status(400).json({
-                    error:{
-                        code:400,
-                        message:"wrong parameters"
+                    error: {
+                        code: 400,
+                        message: "wrong parameters"
                     }
                 })
             }
@@ -182,30 +182,40 @@ module.exports = {
     },
 
     putBook: (req, res) => {
-        let result = f.updateBook(req.body.bookId, req.body.quantity, books, loans);
-        if (result == 1) {
-            res.status(200).json(
-                {
-                    status: "success",
-                    message: `amount of copies of book with id: ${req.body.bookId} updated successfully`
-                });
-        }
-        else if (result == -1) {
-            res.status(400).json(
-                {
+        if (v.validateBookUpdate(req.body.bookId, req.body.quantity)) {
+            let result = f.updateBook(req.body.bookId, req.body.quantity, books, loans);
+            if (result == 1) {
+                res.status(200).json(
+                    {
+                        status: "success",
+                        message: `amount of copies of book with id: ${req.body.bookId} updated successfully`
+                    });
+            }
+            else if (result == -1) {
+                res.status(400).json(
+                    {
+                        error: {
+                            code: 400,
+                            message: "wrong amount of books"
+                        }
+                    })
+            }
+            else {
+                res.status(404).json({
                     error: {
-                        code: 400,
-                        message: "wrong amount of books"
+                        code: 404,
+                        message: "book not found"
                     }
-                })
+                });
+            }
         }
         else {
-            res.status(404).json({
+            res.status(400).json({
                 error: {
-                    code: 404,
-                    message: "book not found"
+                    code: 400,
+                    message: "wrong parameters"
                 }
-            });
+            })
         }
     },
 
@@ -290,6 +300,22 @@ module.exports = {
         }
     },
 
+    deleteLoan: (req, res) => {
+        if (f.returnBook(req.params.id,loans)) {
+            res.status(200).json({
+                status:"success",
+                message:"loan deleted successfully"
+            })
+        }
+        else {
+            res.status(404).json({
+                error:{
+                    code:404,
+                    message:"loan not found"
+                }
+            })
+        }
+    }
 
 
 }
