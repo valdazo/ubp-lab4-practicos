@@ -19,5 +19,9 @@ module.exports = {
             return true;
         }
         return false;
+    },
+
+    validateBookUpdate: (bookId, quantity)=>{
+        return (typeof(bookId)=='number' && Number.isInteger(quantity));
     }
 }

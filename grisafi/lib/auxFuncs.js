@@ -92,16 +92,16 @@ module.exports = {
     },
 
     //returnBook eliminates an entry in loans structure
-    returnBook: (loanId) => {
-        for (let i = 0; i < loans.length; i++) {
-            if (loans[i].id == loanId) {
+    returnBook: (loanId,loansCollection) => {
+        for (let i = 0; i < loansCollection.length; i++) {
+            if (loansCollection[i].id == loanId) {
                 console.log("Book Found");
-                console.log(loans[i]);
-                loans.splice(i, 1);
-                return 1;
+                console.log(loansCollection[i]);
+                loansCollection.splice(i, 1);
+                return true;
             }
         }
-        return 0;
+        return false;
     },
 
 }
