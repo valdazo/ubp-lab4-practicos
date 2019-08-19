@@ -14,4 +14,5 @@ module.exports = app =>{
     app.get("/loans/",(req,res)=>handler.getLoans(req,res));
     app.get("/loans/:id", (req,res) => handler.getLoansMember(req,res));
     app.post("/loans",(req,res)=>handler.postLoan(req,res));
+    app.delete("/loans/:id",(req,res)=>handler.deleteLoan(req,res));
 }
