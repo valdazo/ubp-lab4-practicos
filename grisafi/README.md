@@ -6,7 +6,7 @@ API manages a library's list of members, books and loans
 
 # Requests
 
-## Get */books/* 
+## **Get */books/***
 >Obtain all the books
 >```css
 >localhost:8080/books
@@ -29,7 +29,7 @@ API manages a library's list of members, books and loans
 >>}
 >>```
 
-## GET */books/:id*
+## **GET */books/:id***
 >```css
 >localhost:8080/books/:id
 >```
@@ -38,27 +38,27 @@ API manages a library's list of members, books and loans
 >>id:        id of the book to be searched
 >>```
 >### **Example Response**
->- ***Case* 200 OK** 
->>```json
->>{
->>    "data": {
->>        "bookId": 10,
->>        "title": "Harry Potter",
->>        "available": 100
->>    }
->>}
->>```
->- ***Case* 404 NOT FOUND** 
->>```json
->>{
->>    "error": {
->>        "code": 404,
->>        "message": "book not found"
->>    }
->>}
->>```
+>>- ***Case* 200 OK** 
+>>>```json
+>>>{
+>>>    "data": {
+>>>        "bookId": 10,
+>>>        "title": "Harry Potter",
+>>>        "available": 100
+>>>    }
+>>>}
+>>>```
+>>- ***Case* 404 NOT FOUND** 
+>>>```json
+>>>{
+>>>    "error": {
+>>>        "code": 404,
+>>>        "message": "book not found"
+>>>    }
+>>>}
+>>>```
 
-## POST */books/*
+## **POST */books/***
 >```css
 >localhost:8080/books
 >```
@@ -97,7 +97,7 @@ API manages a library's list of members, books and loans
 >>>}
 >>>```
 
-## DELETE */book/*
+## **DELETE */book/***
 >```css
 >localhost:8080/books/:id
 >```
@@ -132,7 +132,7 @@ API manages a library's list of members, books and loans
 >>>}
 >>>```
 
-## PUT */books/:id*
+## **PUT */books/:id***
 >```css
 >localhost:8080/libros/:idLibro
 >```
@@ -148,39 +148,47 @@ API manages a library's list of members, books and loans
 >>}
 >>```
 >### **Example Response**
->- **Case 200 OK**
->>```json
->>{
->>    "status": "success",
->>    "message": "amount of copies of book with id: {id} updated successfully"
->>}
->>```
->- **Case 404 NOT FOUND**
->>```json
->>{
->>    "error": {
->>        "code": 404,
->>        "message": "book not found"
->>    }
->>}
->>```
->- **Case 403 FORBIDDEN**
->>```json
->>{
->>    "error": {
->>        "code": 400,
->>        "message": "wrong amount of books"
->>    }
->>}
->>```
+>>- **Case 200 OK**
+>>>```json
+>>>{
+>>>    "status": "success",
+>>>    "message": "amount of copies of book with id: {id} updated successfully"
+>>>}
+>>>```
+>>- **Case 404 NOT FOUND**
+>>>```json
+>>>{
+>>>    "error": {
+>>>        "code": 404,
+>>>        "message": "book not found"
+>>>    }
+>>>}
+>>>```
+>>- **Case 403 FORBIDDEN**
+>>>```json
+>>>{
+>>>    "error": {
+>>>        "code": 400,
+>>>        "message": "wrong amount of books"
+>>>    }
+>>>}
+>>>```
+>>- **Case 400 BAD REQUEST**
+>>>```json
+>>>{
+>>>    "error": {
+>>>        "code": 400,
+>>>        "message": "wrong parameters"
+>>>    }
+>>>}
+>>>```
 
-## GET */members/*
+## **GET */members/***
 >Obtain all the library's members
 >```css
 >localhost:8080/members
 >```
 >### **Example Response**
->- **200 OK**
 >>```json
 >>{
 >>    "data": [
@@ -196,7 +204,7 @@ API manages a library's list of members, books and loans
 >>}
 >>```
 
-## GET */members/:id*
+## **GET */members/:id***
 >```css
 >localhost:8080/members/:id
 >```
@@ -205,26 +213,26 @@ API manages a library's list of members, books and loans
 >>id: id of the member to search
 >>```
 >### **Example Response**
->- **Case 200 OK**
->>```json
->>{
->>    "data": {
->>        "id": 1,
->>        "name": "A"
->>    }
->>}
->>```
->- **Case 404 NOT FOUND**
->>```json
->>{
->>    "error": {
->>        "code": 404,
->>        "message": "Member not found"
->>    }
->>}
->>```
+>>- **Case 200 OK**
+>>>```json
+>>>{
+>>>    "data": {
+>>>        "id": 1,
+>>>        "name": "A"
+>>>    }
+>>>}
+>>>```
+>>- **Case 404 NOT FOUND**
+>>>```json
+>>>{
+>>>    "error": {
+>>>        "code": 404,
+>>>        "message": "Member not found"
+>>>    }
+>>>}
+>>>```
 
-## POST */member/*
+## **POST */member/***
 >```css
 >localhost:8080/members
 >```
@@ -236,7 +244,6 @@ API manages a library's list of members, books and loans
 >>}
 >>```
 >### **Example Response**
->- **201 CREATED**
 >>```json
 >>{
 >>    "data": {
@@ -247,7 +254,7 @@ API manages a library's list of members, books and loans
 >>}
 >>```
 
-## GET /loans/
+## **GET */loans/***
 >```css
 >localhost:8080/loans
 >```
@@ -271,7 +278,7 @@ API manages a library's list of members, books and loans
 >>}
 >>```
 
-## GET /loans/:id
+## **GET */loans/:id***
 >Obtains all the loans made by a member via his id
 >```css
 >localhost:8080/loans/:id
@@ -302,7 +309,7 @@ API manages a library's list of members, books and loans
 >>}
 >>```
 
-## POST /loans/
+## **POST */loans/***
 >```css
 >localhost:8080/loans
 >```
@@ -315,85 +322,84 @@ API manages a library's list of members, books and loans
 >>}
 >>```
 >### **Example Response**
->- **Case 200 OK**
->>```json
->>{
->>    "success": true,
->>    "message": "loan of book with id {id} created successfully"
->>}
->>```
->- **Case Member has Unreturned Books**
->>```json
->>{
->>    "error": {
->>        "code": 400,
->>        "message": "member {id} has unreturned books"
->>    }
->>}
->>```
->- **Case Wrong Days**
->>```json
->>{
->>    "error": {
->>        "code": 400,
->>        "message": "wrong number of days"
->>    }
->>}
->>```
->- **Case No Available Copies**
->>```json
->>{
->>    "error": {
->>        "code": 400,
->>        "message": "there are no available copies of Book {id} available for loan"
->>    }
->>}
->>```
->- **Case 404 Member NOT FOUND**
->>```json
->>{
->>    "error": {
->>        "code": 404,
->>        "message": "member not found"
->>    }
->>}
->>```
->- **Case 404 Book NOT FOUND**
->>```json
->>{
->>    "error": {
->>        "code": 404,
->>        "message": "book not found"
->>    }
->>}
->>```
+>>- **Case 200 OK**
+>>>```json
+>>>{
+>>>    "success": true,
+>>>    "message": "loan of book with id {id} created successfully"
+>>>}
+>>>```
+>>- **Case Member has Unreturned Books**
+>>>```json
+>>>{
+>>>    "error": {
+>>>        "code": 400,
+>>>        "message": "member {id} has unreturned books"
+>>>    }
+>>>}
+>>>```
+>>- **Case Wrong Days**
+>>>```json
+>>>{
+>>>    "error": {
+>>>        "code": 400,
+>>>        "message": "wrong number of days"
+>>>    }
+>>>}
+>>>```
+>>- **Case No Available Copies**
+>>>```json
+>>>{
+>>>    "error": {
+>>>        "code": 400,
+>>>        "message": "there are no available copies of Book {id} available for loan"
+>>>    }
+>>>}
+>>>```
+>>- **Case 404 Member NOT FOUND**
+>>>```json
+>>>{
+>>>    "error": {
+>>>        "code": 404,
+>>>        "message": "member not found"
+>>>    }
+>>>}
+>>>```
+>>- **Case 404 Book NOT FOUND**
+>>>```json
+>>>{
+>>>    "error": {
+>>>        "code": 404,
+>>>        "message": "book not found"
+>>>    }
+>>>}
+>>>```
 
 
 
 
-## DELETE Prestamo
-```css
-localhost:8080/prestamos/:idSocio/:idLibro
-```
-#### Path Variables:
-```
-idSocio     <idSocio>
-            ID del Socio que devuelve el Libro
-
-idLibro     <idLibro>
-            ID del Libro devuelto
-```
-### Example Request
-```
-curl --location --request DELETE "127.0.0.1:8080/prestamos/1/10"
-```
-### Example Response
-- Case Libro Devuelto 200 OK
-```
-Libro devuelto
-```
-- Case Error al Devolver el Libro 400 Bad Request
-```
-La operacion no se pudo llevar a cabo
-```
-
+## **DELETE */loans/:id***
+>```css
+>localhost:8080/loans/:id
+>```
+>### **Path Variables**
+>```css
+>id: loan id to be deleted
+>```
+>### **Example Response**
+>>- **Case 200 OK**
+>>>```json
+>>>{
+>>>    "status": "success",
+>>>    "message": "loan deleted successfully"
+>>>}
+>>>```
+>>- **Case 404 NOT FOUND**
+>>>```json
+>>>{
+>>>    "error": {
+>>>        "code": 404,
+>>>        "message": "loan not found"
+>>>    }
+>>>}
+>>>```
