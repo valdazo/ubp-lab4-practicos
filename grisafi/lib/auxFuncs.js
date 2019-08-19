@@ -40,9 +40,9 @@ module.exports = {
     },
 
     //debt returns true if member has books in debt, false if not
-    debt: (memberId) => {
+    debt: (memberId,loans) => {
         for (let i = 0; i < loans.length; i++) {
-            if (memberId == loans[i].memberId && loans[i].fechavencimiento < Date.now()) {
+            if (memberId == loans[i].memberId && loans[i].expiracyDate < Date.now()) {
                 return true;
             }
         }

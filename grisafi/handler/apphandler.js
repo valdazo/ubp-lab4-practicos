@@ -9,7 +9,7 @@ function Book(title, amount, id) {
     this.availables = function () {
         let count = 0;
         for (const prest of loans) {
-            if (prest.idBook == this.id) {
+            if (prest.bookId == this.id) {
                 count++;
             }
         }
@@ -35,7 +35,7 @@ var loans = new Array();
 
 // TODO: este conjunto de push es solo para facilitar la validacion, 
 // borrar una vez que se haya integrado con la base de datos
-books.push(new Book("Harry Potter", 100, 10));
+books.push(new Book("Harry Potter", 3, 10));
 books.push(new Book("El Señor de los Anillos", 10, 20));
 // TODO: este conjunto de push es solo para facilitar la validacion, 
 // borrar una vez que se haya integrado con la base de datos
@@ -43,7 +43,7 @@ members.push(new Member("A", 1));
 members.push(new Member("B", 2));
 // TODO: este conjunto de push es solo para facilitar la validacion, 
 // borrar una vez que se haya integrado con la base de datos
-loans.push(new Loan(1, 1, 10, 20));
+loans.push(new Loan(1, 1, 10, 10));
 loans.push(new Loan(2, 2, 10, 20));
 
 
@@ -122,7 +122,7 @@ module.exports = {
     },
 
     postBook: (req, res) => {
-        if (f.findID(req.body.id, books)==false) {
+        if (f.findID(req.body.id, books) == false) {
             books.push(new Book(req.body.title, req.body.quantity, req.body.id));
             res.status(201).json(
                 {
@@ -131,12 +131,12 @@ module.exports = {
                 }
             );
         }
-        else{
+        else {
             res.status(400).json(
                 {
-                    error:{
-                        code:404,
-                        message:"there's already another book with that id"
+                    error: {
+                        code: 404,
+                        message: "there's already another book with that id"
                     }
                 }
             )
@@ -145,7 +145,7 @@ module.exports = {
 
     deleteBook: (req, res) => {
         let result = f.deleteBook(req.params.id, books, loans);
-        if (result==1) {
+        if (result == 1) {
             res.status(200).json({
                 success: true,
                 message: "book deleted"
@@ -210,12 +210,7 @@ module.exports = {
         console.log(`GET /loans/:id`);
         if (f.findID(req.params.id, members)) {
             let prest = f.getLoansId(req.params.id, loans);
-            if (prest.length == 0) {
-                res.status(204).json({ message: `There are no loans made by member with id: ${req.params.id}` });
-            }
-            else {
-                res.status(200).json({ data: prest });
-            }
+            res.status(200).json({ data: prest });
         }
         else {
             res.status(404).json(
@@ -229,20 +224,29 @@ module.exports = {
     },
 
     postLoan: (req, res) => {
-        if (f.adeuda(req.body.MemberId)) {
+        if (f.debt(req.body.memberId,loans)) {
             res.status(400).json({
                 error: {
                     code: 400,
-                    message: `Member ${req.body.MemberId} has unreturned books`
+                    message: `member ${req.body.memberId} has unreturned books`
                 }
             });
         }
         else {
-            if (f.findID(req.body.BookId, books).availables() > 0) {
-                loans.push(new Loan(f.generatePrestamosID(), req.body.MemberId, req.body.BookId, req.body.days));
+            let book = f.findID(req.body.bookId, books);
+            if (book==false){
+                res.status(404).json({
+                    error:{
+                        code:404,
+                        message:"book not found"
+                    }
+                })
+            }
+            if (book.availables() > 0) {
+                loans.push(new Loan(f.generateLoansID(), req.body.memberId, req.body.bookId, req.body.days));
                 res.status(200).json({
                     success: true,
-                    message: `Loan of book ${req.body.BookId} created successfully`
+                    message: `loan of book with id ${req.body.bookId} created successfully`
                 });
             }
             else {
@@ -250,7 +254,7 @@ module.exports = {
                     {
                         error: {
                             code: 400,
-                            message: `There are no available copies of Book ${req.body.BookId} available for loan`
+                            message: `there are no available copies of Book ${req.body.bookId} available for loan`
                         }
                     })
             }
