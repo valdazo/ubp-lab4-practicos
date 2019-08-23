@@ -1,11 +1,22 @@
 ﻿# Biblioteca - API REST
+
+## Tabla de contenidos
+[Descripción](#Descripción)  
+[Escenario](#Escenario)  
+[Socios](#Get%20-%20listAllPartners())  
+[Libros](#GET%20-%20listAllBooks())  
+[Préstamos](#GET%20-%20listAllLoans())  
+[Control de tiempo](#POST%20-%20modifyTime())
+
+# 
 ## Descripción
 Esta es una API REST desarrollada en node.js para controlar el funcionamiento de una biblioteca con socios.
 ## Escenario
 La biblioteca posee una base de datos de socios (*partners*) y otra de libros (*books*), de las cuales se pueden realizar operaciones de consulta, creación y eliminación.
 Los socios pueden pedir prestados cuantos libros quieran por determinado tiempo, vencido el cual ya no pueden llevarse más hasta devolver los que se hayan pasado de fecha.
+
 ## Endpoints
-### GET - listAllPartners()
+#### GET - listAllPartners()
 >localhost:5555/partners/
 
 **Response code:** 200
