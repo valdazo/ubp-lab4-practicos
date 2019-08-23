@@ -3,10 +3,10 @@
 ## Tabla de contenidos
 [Descripción](#Descripción)  
 [Escenario](#Escenario)  
-[Socios](#Get%20-%20listAllPartners())  
-[Libros](#GET%20-%20listAllBooks())  
-[Préstamos](#GET%20-%20listAllLoans())  
-[Control de tiempo](#POST%20-%20modifyTime())
+[Socios](#Get-listAllPartners())  
+[Libros](#GET-listAllBooks())  
+[Préstamos](#GET-listAllLoans())  
+[Control de tiempo](#POST-modifyTime())
 
 # 
 ## Descripción
@@ -16,7 +16,7 @@ La biblioteca posee una base de datos de socios (*partners*) y otra de libros (*
 Los socios pueden pedir prestados cuantos libros quieran por determinado tiempo, vencido el cual ya no pueden llevarse más hasta devolver los que se hayan pasado de fecha.
 
 ## Endpoints
-#### GET - listAllPartners()
+#### GET listAllPartners()
 >localhost:5555/partners/
 
 **Response code:** 200
@@ -31,7 +31,7 @@ Los socios pueden pedir prestados cuantos libros quieran por determinado tiempo,
 	    ...
     ]
 
-### GET - getPartner()
+### GET getPartner()
 >localhost:5555/partners/{id}
 
 |  | OK| No encontrado | ID no válido |
@@ -57,7 +57,7 @@ Los socios pueden pedir prestados cuantos libros quieran por determinado tiempo,
     {
 	    "message": "Invalid id."
 	}
-### POST - addPartner()
+### POST addPartner()
 >localhost:5555/partners/
 
 **Request body:**
@@ -115,7 +115,7 @@ Los socios pueden pedir prestados cuantos libros quieran por determinado tiempo,
     {
 	    "message": "Invalid id."
 	}
-### GET - listAllBooks()
+### GET listAllBooks()
 >localhost:5555/books/
 
 **Response code:** 200
@@ -131,7 +131,7 @@ Los socios pueden pedir prestados cuantos libros quieran por determinado tiempo,
 	    ...
     ]
     
-### GET - getBook()
+### GET getBook()
 >localhost:5555/boooks/{id}
 
 |  | OK| No encontrado | ID no válido |
@@ -158,7 +158,7 @@ Los socios pueden pedir prestados cuantos libros quieran por determinado tiempo,
     {
 	    "message": "Invalid id."
 	}
-### POST - addBook()
+### POST addBook()
 >localhost:5555/books/
 
 **Request body:**
@@ -213,7 +213,7 @@ Los socios pueden pedir prestados cuantos libros quieran por determinado tiempo,
     {
 	    "message": "Invalid id."
 	}
-### GET - listAllLoans()
+### GET listAllLoans()
 >localhost:5555/loans/
 
 **Response code:** 200
@@ -227,7 +227,7 @@ Los socios pueden pedir prestados cuantos libros quieran por determinado tiempo,
 	    },
 	    ...
     ]
-### GET - lentBook()
+### GET lentBook()
 >localhost:5555/boooks/{id}
 
 **Request body:**
@@ -349,7 +349,7 @@ Los socios pueden pedir prestados cuantos libros quieran por determinado tiempo,
 	    "message": "Invalid data."
 	}
 
-### POST - modifyTime()
+### POST modifyTime()
 >localhost:5555/time/
 
 Endpoint utilizado para testing, permite movernos hacia adelante y hacia atrás en el tiempo para forzar el vencimiento de los préstamos.
