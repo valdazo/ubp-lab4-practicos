@@ -130,35 +130,39 @@ app.get('/prestamos/:idSocio', function(req,res){
 app.post('/prestamos', function(req,res){
     var validarDatos = validarDatosPrestamo(req.body.idLibro, req.body.idSocio);
     var prestamosSocio, comprobarVencidos, nuevoPrestamo;
-    var cantidadDias = req.body.cantidadDias;
     
-    if(validarDatos == true){
-        if(disponibilidad(req.body.idLibro)>0){
-            prestamosSocio = buscarPrestamos(prestamos, req.body.idSocio);
-            comprobarVencidos = comprobarLibrosVencidos(prestamosSocio);
+    var cantidadDias = req.body.cantidadDias;
+    if(!Number.isInteger(cantidadDias)){
+        res.status(400).json("Debe ser un entero");
+    }
+    else{
+        if(validarDatos == true){
+            if(disponibilidad(req.body.idLibro)>0){
+                prestamosSocio = buscarPrestamos(prestamos, req.body.idSocio);
+                comprobarVencidos = comprobarLibrosVencidos(prestamosSocio);
 
-            if(comprobarVencidos == true){
-                if(cantidadDias >= 0){
-                    nuevoPrestamo = new Prestamo(getNewID(),req.body.idLibro,req.body.idSocio, obtenerFechaVto(cantidadDias));
-                    prestamos.push(nuevoPrestamo);
-                    res.status(201).json(nuevoPrestamo.id);
+                if(comprobarVencidos == true){
+                    if(cantidadDias >= 0){
+                        nuevoPrestamo = new Prestamo(getNewID(),req.body.idLibro,req.body.idSocio, obtenerFechaVto(cantidadDias));
+                        prestamos.push(nuevoPrestamo);
+                        res.status(201).json(nuevoPrestamo.id);
+                    }
+                    else{
+                        res.status(400).json("La cantidad de dias debe ser mayor a cero");
+                    }   
                 }
                 else{
-                    res.status(400).json("La cantidad de dias debe ser mayor a cero");
-                }   
+                    res.status(400).json("Socio tiene prestamos vencidos, no puede pedir libros");
+                }
             }
             else{
-                res.status(400).json("Socio tiene prestamos vencidos, no puede pedir libros");
+                res.status(400).json("No hay ejemplares disponibles");
             }
         }
         else{
-            res.status(400).json("No hay ejemplares disponibles");
+            res.status(404).json("El libro o socio no existen");
         }
     }
-    else{
-        res.status(404).json("El libro o socio no existen");
-    }
-        
 })
 
 // REQ3.2 Devolver libro prestado
