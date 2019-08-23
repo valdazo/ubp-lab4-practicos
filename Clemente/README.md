@@ -3,10 +3,10 @@
 ## Tabla de contenidos
 [Descripción](#Descripción)  
 [Escenario](#Escenario)  
-[Socios](#Get%20-%20listAllPartners)  
-[Libros](#GET%20-%20listAllBooks)  
-[Préstamos](#GET%20-%20listAllLoans)  
-[Control de tiempo](#POST%20-%20modifyTime)
+[Socios](#Get---listAllPartners)  
+[Libros](#GET---listAllBooks)  
+[Préstamos](#GET---listAllLoans)  
+[Control de tiempo](#POST---modifyTime)
 
 # 
 ## Descripción
