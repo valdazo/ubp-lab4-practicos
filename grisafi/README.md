@@ -4,6 +4,23 @@
 
 API manages a library's list of members, books and loans
 
+# Table of Contents
+- [Books](#GET-Books)  
+    * [GET Books](#Get-/books/)  
+    * [GET Book by ID](#GET-/books/:id)
+    * [POST Book](#POST-/books/)
+    * [DELETE Book](#DELETE-/book/)
+    * [PUT Book](#PUT-/books/:id)
+- [Members](#GET-Members)
+    * [GET Members](#GET-Members)
+    * [GET Member by ID](#GET-/members/:id)
+    * [POST Member](#POST-/members/)
+- [Loans](#GET-/loans/)
+    * [GET Loans](#GET-/loans/)
+    * [GET Loan by Member ID](#GET-/loans/:id)
+    * [POST Loan](#POST-/loans/)
+    * [DELETE Loan](#DELETE-/loans/:id)
+
 # Requests
 
 ## **Get */books/***
@@ -14,6 +31,7 @@ API manages a library's list of members, books and loans
 >### **Example Response**
 >>```json
 >>{
+>>    "code":200,
 >>    "data": [
 >>        {
 >>            "id": 10,
@@ -41,6 +59,7 @@ API manages a library's list of members, books and loans
 >>- ***Case* 200 OK** 
 >>>```json
 >>>{
+>>>    "code":200,
 >>>    "data": {
 >>>        "bookId": 10,
 >>>        "title": "Harry Potter",
@@ -74,7 +93,7 @@ API manages a library's list of members, books and loans
 >>- **201 Created**
 >>>```json
 >>>{
->>>    "status": "success",
+>>>    "code":201,
 >>>    "message": "book added"
 >>>}
 >>>```
@@ -109,7 +128,7 @@ API manages a library's list of members, books and loans
 >>- **Case 200 OK**
 >>>```json
 >>>{
->>>    "success": true,
+>>>    "code":200,
 >>>    "message": "book deleted"
 >>>}
 >>>```
@@ -151,7 +170,7 @@ API manages a library's list of members, books and loans
 >>- **Case 200 OK**
 >>>```json
 >>>{
->>>    "status": "success",
+>>>    "code":200,
 >>>    "message": "amount of copies of book with id: {id} updated successfully"
 >>>}
 >>>```
@@ -168,7 +187,7 @@ API manages a library's list of members, books and loans
 >>>```json
 >>>{
 >>>    "error": {
->>>        "code": 400,
+>>>        "code": 403,
 >>>        "message": "wrong amount of books"
 >>>    }
 >>>}
@@ -191,6 +210,7 @@ API manages a library's list of members, books and loans
 >### **Example Response**
 >>```json
 >>{
+>>    "code":200,
 >>    "data": [
 >>        {
 >>            "id": 1,
@@ -216,6 +236,7 @@ API manages a library's list of members, books and loans
 >>- **Case 200 OK**
 >>>```json
 >>>{
+>>>    "code":200,
 >>>    "data": {
 >>>        "id": 1,
 >>>        "name": "A"
@@ -232,7 +253,7 @@ API manages a library's list of members, books and loans
 >>>}
 >>>```
 
-## **POST */member/***
+## **POST */members/***
 >```css
 >localhost:8080/members
 >```
@@ -246,6 +267,7 @@ API manages a library's list of members, books and loans
 >### **Example Response**
 >>```json
 >>{
+>>    "code":200,
 >>    "data": {
 >>        "id": 3,
 >>        "name": "member 3"
@@ -261,6 +283,7 @@ API manages a library's list of members, books and loans
 >### **Example Response**
 >>```json
 >>{
+>>    "code":200,
 >>    "data": [
 >>        {
 >>            "id": 1,
@@ -291,6 +314,7 @@ API manages a library's list of members, books and loans
 >- ***Case* 200 OK**
 >>```json
 >>{
+>>    "code":200,
 >>    "data": [
 >>        {
 >>            "bookId": 10,
@@ -325,7 +349,7 @@ API manages a library's list of members, books and loans
 >>- **Case 200 OK**
 >>>```json
 >>>{
->>>    "success": true,
+>>>    "code":200,
 >>>    "message": "loan of book with id {id} created successfully"
 >>>}
 >>>```
@@ -375,9 +399,6 @@ API manages a library's list of members, books and loans
 >>>}
 >>>```
 
-
-
-
 ## **DELETE */loans/:id***
 >```css
 >localhost:8080/loans/:id
@@ -390,7 +411,7 @@ API manages a library's list of members, books and loans
 >>- **Case 200 OK**
 >>>```json
 >>>{
->>>    "status": "success",
+>>>    "code":200,
 >>>    "message": "loan deleted successfully"
 >>>}
 >>>```
