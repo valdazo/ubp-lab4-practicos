@@ -1,5 +1,5 @@
-let f = require('../lib/auxFuncs');
-let v = require('../lib/validators');
+let func = require('../lib/auxFuncs');
+let validator = require('../lib/validators');
 
 const DIA_EN_MILISEGUNDOS = 1000 * 60 * 60 * 24;
 
@@ -52,14 +52,20 @@ module.exports = {
 
     getMembers: (req, res) => {
         console.log(`GET /members/`);
-        res.status(200).json({ data: members });
+        res.status(200).json({ 
+            code:200,
+            data: members 
+        });
     },
 
     getMemberId: (req, res) => {
         console.log(`GET /members/${req.params.id}`);
-        let member = f.findID(req.params.id, members);
+        let member = func.findID(req.params.id, members);
         if (member) {
-            res.status(200).json({ data: member });
+            res.status(200).json({ 
+                code:200,
+                data: member 
+            });
         }
         else {
             res.status(404).json({
@@ -73,10 +79,11 @@ module.exports = {
 
     postMember: (req, res) => {
         console.log("POST /members/")
-        if (req.body.name != null && v.validateId(req.body.id)) {
+        if (req.body.name != null && validator.validateId(req.body.id)) {
             members.push(new Member(req.body.name, req.body.id));
             res.status(201).json(
                 {
+                    code:201,
                     data: {
                         id: req.body.id,
                         name: req.body.name
@@ -87,7 +94,7 @@ module.exports = {
         else {
             res.status(400).json({
                 error: {
-                    code: 404,
+                    code: 400,
                     message: "Incorrect Parameters"
                 }
             });
@@ -96,14 +103,18 @@ module.exports = {
 
     getBooks: (req, res) => {
         console.log(`GET /books/`);
-        res.status(200).json({ data: books });
+        res.status(200).json({
+            code:200,
+            data: books
+        });
     },
 
     getBookId: (req, res) => {
-        let book = f.findID(req.params.id, books);
+        let book = func.findID(req.params.id, books);
         if (book != 0) {
             res.status(200).json(
                 {
+                    code:200,
                     data: {
                         "bookId": parseInt(req.params.id),
                         "title": book.title,
@@ -123,12 +134,12 @@ module.exports = {
     },
 
     postBook: (req, res) => {
-        if (f.findID(req.body.id, books) == false) {
-            if (v.validateBook(req.body.title, req.body.quantity, req.body.id)) {
+        if (func.findID(req.body.id, books) == false) {
+            if (validator.validateBook(req.body.title, req.body.quantity, req.body.id)) {
                 books.push(new Book(req.body.title, req.body.quantity, req.body.id));
                 res.status(201).json(
                     {
-                        status: "success",
+                        code:201,
                         message: "book added"
                     }
                 );
@@ -155,10 +166,10 @@ module.exports = {
     },
 
     deleteBook: (req, res) => {
-        let result = f.deleteBook(req.params.id, books, loans);
+        let result = func.deleteBook(req.params.id, books, loans);
         if (result == 1) {
             res.status(200).json({
-                success: true,
+                code:200,
                 message: "book deleted"
             });
         }
@@ -182,12 +193,12 @@ module.exports = {
     },
 
     putBook: (req, res) => {
-        if (v.validateBookUpdate(req.body.bookId, req.body.quantity)) {
-            let result = f.updateBook(req.body.bookId, req.body.quantity, books, loans);
+        if (validator.validateBookUpdate(req.body.bookId, req.body.quantity)) {
+            let result = func.updateBook(req.body.bookId, req.body.quantity, books, loans);
             if (result == 1) {
                 res.status(200).json(
                     {
-                        status: "success",
+                        code:200,
                         message: `amount of copies of book with id: ${req.body.bookId} updated successfully`
                     });
             }
@@ -222,16 +233,25 @@ module.exports = {
     getLoans: (req, res) => {
         console.log(`GET Loans`);
         if (loans != null)
-            res.status(200).json({ data: loans });
+            res.status(200).json({ 
+                code:200,
+                data: loans 
+            });
         else
-            res.status(204).json({ message: "no loans registered" });
+            res.status(204).json({ 
+                code:204,
+                message: "no loans registered" 
+            });
     },
 
     getLoansMember: (req, res) => {
         console.log(`GET /loans/:id`);
-        if (f.findID(req.params.id, members)) {
-            let prest = f.getLoansId(req.params.id, loans);
-            res.status(200).json({ data: prest });
+        if (func.findID(req.params.id, members)) {
+            let prest = func.getLoansId(req.params.id, loans);
+            res.status(200).json({ 
+                code:200,
+                data: prest 
+            });
         }
         else {
             res.status(404).json(
@@ -245,7 +265,7 @@ module.exports = {
     },
 
     postLoan: (req, res) => {
-        if (f.findID(req.body.memberId, members) == false) {
+        if (func.findID(req.body.memberId, members) == false) {
             res.status(404).json({
                 error: {
                     code: 404,
@@ -254,7 +274,7 @@ module.exports = {
             })
         }
 
-        else if (!v.validateDays(req.body.days)) {
+        else if (!validator.validateDays(req.body.days)) {
             res.status(400).json({
                 error: {
                     code: 400,
@@ -263,7 +283,7 @@ module.exports = {
             })
         }
 
-        else if (f.debt(req.body.memberId, loans)) {
+        else if (func.debt(req.body.memberId, loans)) {
             res.status(400).json({
                 error: {
                     code: 400,
@@ -272,7 +292,7 @@ module.exports = {
             });
         }
         else {
-            let book = f.findID(req.body.bookId, books);
+            let book = func.findID(req.body.bookId, books);
             if (book == false) {
                 res.status(404).json({
                     error: {
@@ -282,9 +302,9 @@ module.exports = {
                 })
             }
             else if (book.availables() > 0) {
-                loans.push(new Loan(f.generateLoansID(), req.body.memberId, req.body.bookId, req.body.days));
+                loans.push(new Loan(func.generateLoansID(), req.body.memberId, req.body.bookId, req.body.days));
                 res.status(200).json({
-                    success: true,
+                    code:200,
                     message: `loan of book with id ${req.body.bookId} created successfully`
                 });
             }
@@ -301,9 +321,9 @@ module.exports = {
     },
 
     deleteLoan: (req, res) => {
-        if (f.returnBook(req.params.id,loans)) {
-            res.status(200).json({
-                status:"success",
+        if (func.returnBook(req.params.id,loans)) {
+            res.status(204).json({
+                code:204,
                 message:"loan deleted successfully"
             })
         }

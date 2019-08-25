@@ -15,7 +15,7 @@ module.exports = {
     },
 
     validateBook: (title, quantity, id)=>{
-        if(/^\d*$/.test(quantity) && /^\d*$/.test(id) && typeof(title)=='string'){
+        if( /^\d+$/.test(quantity) &&  /^\d+$/.test(id) && typeof(title)=='string' && title.length>0){
             return true;
         }
         return false;

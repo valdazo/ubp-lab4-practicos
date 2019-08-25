@@ -77,13 +77,13 @@ module.exports = {
 
     //getLoansId returns all the current loans by a member via his id
     getLoansId: (memberId, loansCollection) => {
-        let prest = new Array();
+        let loan = new Array();
         for (let i = 0; i < loansCollection.length; i++) {
             if (memberId == loansCollection[i].memberId) {
-                prest.push({ "bookId": loansCollection[i].bookId, "expiracyDate": new Date(loansCollection[i].expiracyDate) });
+                loan.push({ "bookId": loansCollection[i].bookId, "expiracyDate": new Date(loansCollection[i].expiracyDate) });
             }
         }
-        return prest;
+        return loan;
     },
 
     //generateLoansID generates an unique id for a loan
