@@ -6,8 +6,8 @@ API manages a library's list of members, books and loans
 
 # Table of Contents
 - [Books](#GET-Books)  
-    * [GET Books](#Get-/books/)  
-    * [GET Book by ID](#GET-/books/:id)
+    * [GET Books](#Get-books)  
+    * [GET Book by ID](#GET-books/:id)
     * [POST Book](#POST-/books/)
     * [DELETE Book](#DELETE-/book/)
     * [PUT Book](#PUT-/books/:id)
