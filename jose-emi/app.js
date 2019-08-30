@@ -17,12 +17,11 @@ function Socio(nombre,id){
     this.nombre = nombre;
 }
 
-function Prestamo(id,idLibro,idSocio, fechaVto){
+function Prestamo(id, idLibro, idSocio, fechaVto){
     this.id = id;
     this.idLibro = idLibro;
     this.idSocio = idSocio;
     this.fechaVto = fechaVto;
-    
 }
 
 var socios = new Array();
@@ -32,7 +31,7 @@ var prestamos = new Array();
 // REQ1.1 Añadir libros
 app.post('/libros',function(req,res){
     if(req.body.titulo!=null){
-        if(Number.isInteger(req.body.cantidad) && req.body.cantidad>0 ){
+        if(Number.isInteger(req.body.cantidad) && req.body.cantidad > 0 ){
             var nuevoLibro = new Libro(req.body.titulo,getNewID(),req.body.cantidad);
             libros.push(nuevoLibro);
             res.status(201).json(nuevoLibro.id);
@@ -132,28 +131,38 @@ app.post('/prestamos', function(req,res){
     var validarDatos = validarDatosPrestamo(req.body.idLibro, req.body.idSocio);
     var prestamosSocio, comprobarVencidos, nuevoPrestamo;
     
-    if(validarDatos == true){
-        if(disponibilidad(req.body.idLibro)>0){
-            prestamosSocio = buscarPrestamos(prestamos, req.body.socios);
-            comprobarVencidos = comprobarLibrosVencidos(prestamosSocio);
+    var cantidadDias = req.body.cantidadDias;
+    if(!Number.isInteger(cantidadDias)){
+        res.status(400).json("Debe ser un entero");
+    }
+    else{
+        if(validarDatos == true){
+            if(disponibilidad(req.body.idLibro)>0){
+                prestamosSocio = buscarPrestamos(prestamos, req.body.idSocio);
+                comprobarVencidos = comprobarLibrosVencidos(prestamosSocio);
 
-            if(comprobarVencidos == true){
-                nuevoPrestamo = new Prestamo(getNewID(),req.body.idLibro,req.body.idSocio, obtenerFechaVto(10));
-                prestamos.push(nuevoPrestamo);
-                res.status(201).json(nuevoPrestamo.id);
+                if(comprobarVencidos == true){
+                    if(cantidadDias >= 0){
+                        nuevoPrestamo = new Prestamo(getNewID(),req.body.idLibro,req.body.idSocio, obtenerFechaVto(cantidadDias));
+                        prestamos.push(nuevoPrestamo);
+                        res.status(201).json(nuevoPrestamo.id);
+                    }
+                    else{
+                        res.status(400).json("La cantidad de dias debe ser mayor a cero");
+                    }   
+                }
+                else{
+                    res.status(400).json("Socio tiene prestamos vencidos, no puede pedir libros");
+                }
             }
             else{
-                res.status(400).json("Socio tiene prestamos vencidos, no puede pedir libros");
+                res.status(400).json("No hay ejemplares disponibles");
             }
         }
         else{
-            res.status(400).json("No hay ejemplares disponibles");
+            res.status(404).json("El libro o socio no existen");
         }
     }
-    else{
-        res.status(404).json("El libro o socio no existen");
-    }
-        
 })
 
 // REQ3.2 Devolver libro prestado
@@ -194,6 +203,8 @@ libros.push(new Libro("El perro siberiano",getNewID(),14));
 socios.push(new Socio("Juan Pereyra",getNewID()));
 socios.push(new Socio("Juana Manso",getNewID()));
 socios.push(new Socio("Pedro Picapiedra",getNewID()));
+
+prestamos.push(new Prestamo(getNewID(), libros[0].id, socios[0].id, new Date("15 August 2019")));
 
 function getNewID(){
     return Math.random().toString(36).substr(2,9);
@@ -288,7 +299,7 @@ function comprobarLibrosVencidos(prestamosSocio){
     fechaActual = Date.now();
     if(prestamosSocio!=null){
         for(var p of prestamosSocio){
-            if(fechaActual > p.fecVto){
+            if(fechaActual > p.fechaVto){
                 return false;
             }
         }
