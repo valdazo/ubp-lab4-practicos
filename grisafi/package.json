@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/valdazo/ubp-lab4-practicos#readme",
   "dependencies": {
-    "express": "^4.16.4"
+    "express": "^4.17.1"
   }
 }
