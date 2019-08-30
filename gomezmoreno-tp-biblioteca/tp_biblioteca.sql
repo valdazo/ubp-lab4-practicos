@@ -22,7 +22,7 @@ create table bd_biblioteca.prestamos (
     idPrestamo          varchar(9)      not null,
     idSocio             varchar(9)      not null,
     idLibro             varchar(9)      not null,
-    fechaVencimiento    integer         not null,
+    fechaVencimiento    bigint         not null,
     primary key (idPrestamo),
     foreign key (idLibro) references bd_biblioteca.libros(id_Libro),
     foreign key (idSocio) references bd_biblioteca.socios(id_Socio)
