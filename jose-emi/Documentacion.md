@@ -130,7 +130,7 @@
     400: Bad request.
     Body: { "No se encontraron libros prestado   al socio" }
 
-**RQ3.1**: Registrar un préstamo de un libro a un socio, describiendo la cantidad de dias que tiene para devolverlo.
+**RQ3.1**: Registrar un préstamo de un libro a un socio.
 
 *Request*
 
@@ -140,7 +140,6 @@
     { 
         “idLibro”: <idLibro>,
         “idSocio”: <idSocio>
-	"cantidadDias": <dias>
     }
 
 *Response*
@@ -155,7 +154,7 @@
     Body: { "Socio tiene prestamos vencidos, no puede pedir libros" }
     
 
-**RQ3.2**: Devolver libro prestado, eliminandolo de los préstamos.
+**RQ3.2**: Devolver libro prestado.
 
 *Request*
 
