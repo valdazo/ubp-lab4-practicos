@@ -64,7 +64,7 @@
 #### Si se quiere ingresar una cantidad que es menor a la cantidad de libros que están prestados:
 ##### *Response*
 	400 Bad Request
-	Body: {"No puede ingresarse una cantidad menor a la cantidad de ejemplares prestados"}
+	Body: {"La cantidad nueva no puede ser menor a la cantidad de ejemplares que estan prestados"}
 
 
 ### **RQ1.4:** Obtener la cantidad de ejemplares disponibles para préstamo en la librería
@@ -116,7 +116,7 @@
 
 #### Si el socio ingresado no tiene libros prestados:
 ##### *Response*
-	400 Bad Request
+	204 No Content
 	Body: {"El socio no tiene libros prestados"}
 
 
@@ -127,7 +127,7 @@
 	{
 		idSocio: <idSocio>,
 		idLibro: <idLibro>,
-		fechaVencimiento: <fechaVencimiento>
+		diasPrestamo: <diasPrestamo>
 	}
 ##### *Response*
 	201 Created
@@ -152,6 +152,11 @@
 ##### *Response*
 	400 Bad Request
 	Body: {"Socio tiene prestamos vencidos, no puede pedir libros"}
+
+#### Si la cantidad de dias de prestamo ingresada es nula o negativa:
+##### *Response*
+	400 Bad Request
+	Body: {"La cantidad de dias del prestamo de no debe ser nula ni negativa"}
 
 
 ### **RQ3.2:** Un socio puede devolver un libro prestado.
