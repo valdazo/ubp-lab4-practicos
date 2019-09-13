@@ -1,8 +1,9 @@
-use bd_biblioteca;
+-- CREATE DATABASE IF NOT EXISTS bd_biblioteca;
+USE bd_biblioteca;
 
-drop table bd_biblioteca.libros;
-drop table bd_biblioteca.socios;
-
+-- drop table bd_biblioteca.libros;
+-- drop table bd_biblioteca.socios;
+-- drop table bd_biblioteca.prestamos;
 
 create table bd_biblioteca.libros (
     id_Libro        varchar(9)      not null,

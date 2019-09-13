@@ -7,7 +7,7 @@ var app = express();
 app.use(bodyParser.json());
 
 var con = mysql.createConnection({
-  host: "localhost",
+  host: "db",
   user: "biblioteca",
   password: "biblioteca",
   database: "bd_biblioteca"
@@ -308,7 +308,7 @@ app.delete('/prestamos/:prestamo', async function (req, res) {
     }
 })
 
-var server = app.listen(8080, '127.0.0.1', function () {
+var server = app.listen(8080, '0.0.0.0', function () {
   var host = server.address().address
   var port = server.address().port
   con.connect(function(err) {
