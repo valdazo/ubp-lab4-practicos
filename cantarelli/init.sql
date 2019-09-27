@@ -21,7 +21,7 @@ CREATE TABLE prestamos
     id          SMALLINT NOT NULL,
     idLibro     SMALLINT NOT NULL,
     idSocio     SMALLINT NOT NULL,
-    fechaVencimiento INTEGER NOT NULL,
+    fechaVencimiento BIGINT NOT NULL,
     CONSTRAINT PK_prestamos PRIMARY KEY (id),
     CONSTRAINT FK_prestamos_libro FOREIGN KEY (idLibro) REFERENCES libros(id),
     CONSTRAINT FK_prestamos_socio FOREIGN KEY (idSocio) REFERENCES socios(id),
