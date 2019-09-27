@@ -1,0 +1,22 @@
+{
+  "name": "ubp-lab4-practicos",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/valdazo/ubp-lab4-practicos.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/valdazo/ubp-lab4-practicos/issues"
+  },
+  "homepage": "https://github.com/valdazo/ubp-lab4-practicos#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
