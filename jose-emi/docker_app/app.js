@@ -11,10 +11,10 @@ const DIAS_MILI_SEG = 1000 * 60 * 60 * 24;
 var mysql = require('mysql');
 
 var con = mysql.createConnection({
-  host: "localhost",
-  user: "emi",
-  password: "Sir-Calvin311",
-  database: "biblioteca"
+  host: "db",
+  user: "user",
+  password: "password",
+  database: "jose-emi"
 });
 
 con.connect(function(err) {
@@ -232,7 +232,7 @@ function obtenerFechaVto(dias){
     return fecVto;
 }
 
-var server = app.listen(8080, '127.0.0.1', function () {
+var server = app.listen(8080, '0.0.0.0', function () {
   var host = server.address().address;
   var port = server.address().port;
   console.log("Example app listening at http://%s:%s", host, port);

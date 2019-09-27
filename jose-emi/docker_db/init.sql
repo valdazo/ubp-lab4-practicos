@@ -1,3 +1,5 @@
+use jose-emi;
+
 create table libros(
     id_libro    VARCHAR(10)    not NULL,
     titulo      VARCHAR(255)    not NULL,
@@ -27,7 +29,3 @@ create table prestamos(
     CONSTRAINT  FK__prestamos__socios__END
         FOREIGN KEY (id_socio) REFERENCES socios(id_socio)
 );
-
-select *
-    from libros l
-    where l.id_libro = id_libro
