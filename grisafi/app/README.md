@@ -84,7 +84,6 @@ API manages a library's list of members, books and loans
 >#### Body
 >>```json
 >>{
->>	"id":100,
 >>	"title":"Don Quijote",
 >>	"quantity":100
 >>}
@@ -163,7 +162,7 @@ API manages a library's list of members, books and loans
 >>```json
 >>{
 >>	"bookId":100,
->>	"quantity":20
+>>	"amount":20
 >>}
 >>```
 >### **Example Response**
@@ -268,11 +267,7 @@ API manages a library's list of members, books and loans
 >>```json
 >>{
 >>    "code":200,
->>    "data": {
->>        "id": 3,
->>        "name": "member 3"
->>    },
->>    "message": "Member with id 3 created successfully"
+>>    "message": "Member created successfully"
 >>}
 >>```
 

@@ -7,6 +7,7 @@ module.exports = {
         return true;
     },
 
+    //validateId check if params id is a valid number by checking if it is a number and is not a null
     validateId:(id)=>{
         if(typeof(id)!='number' || id==null){
             return false;
@@ -14,14 +15,15 @@ module.exports = {
         return true;
     },
 
-    validateBook: (title, quantity, id)=>{
-        if( /^\d+$/.test(quantity) &&  /^\d+$/.test(id) && typeof(title)=='string' && title.length>0){
+    validateBook: (title, amount)=>{
+        if( /^\d+$/.test(amount) && typeof(title)=='string' && title.length>0){
             return true;
         }
         return false;
     },
 
-    validateBookUpdate: (bookId, quantity)=>{
-        return (typeof(bookId)=='number' && Number.isInteger(quantity));
-    }
+    validateBookUpdate: (bookId, amount)=>{
+        return (typeof(bookId)=='number' && Number.isInteger(amount) && amount>0);
+    },
+
 }

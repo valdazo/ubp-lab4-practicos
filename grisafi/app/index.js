@@ -8,4 +8,4 @@ app.use(bodyParser.json({ type: 'applicationlication/json' }));
 
 require("./routes/app.routes")(app);
 
-app.listen(8080, ()=> console.log("app running on port 8080"));
+app.listen(8081,"0.0.0.0", ()=> console.log("app running on port 8081"));

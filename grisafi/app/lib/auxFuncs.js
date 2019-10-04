@@ -29,7 +29,7 @@ module.exports = {
         }
     },
 
-    //findID finds the membeor of book by its id
+    //findID finds the member of book by its id
     findID: (id, collection) => {
         for (let i = 0; i < collection.length; i++) {
             if (id == collection[i].id) {

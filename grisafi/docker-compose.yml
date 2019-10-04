@@ -1,0 +1,21 @@
+version: '3'
+services:
+    app:
+      build: .
+      depends_on:
+        - db
+      ports:
+      - "8080:8081"
+    db:
+      image: mysql:5.7
+      volumes:
+        - ./ubp-lab4-practicos/grisafi/libraryDB.sql:/docker-entrypoint-initdb.d/libraryDB.sql
+      environment:
+         MYSQL_DATABASE: library
+         MYSQL_USER: library
+         MYSQL_PASSWORD: library
+         MYSQL_ROOT_PASSWORD: root
+      ports:
+        - '3307:3306'
+      expose:
+        - '3306'
