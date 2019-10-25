@@ -1,3 +1,4 @@
+// TinoQL® 1.0
 let db = require('../db/db.manager');
 let time = require('../lib/time');
 

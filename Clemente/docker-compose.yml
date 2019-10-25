@@ -1,0 +1,19 @@
+version: '2'
+services:
+  api:
+    build: ./API_Biblioteca
+    ports:
+        - "5555:5555"
+    restart: always
+    command: npm start
+  db:
+    container_name: api_db
+    build: ./API_DB
+    volumes:
+        - .:/app/db
+    ports:
+        - "7070:7070"
+    restart: always
+    environment:
+        - NODE_ENV=production
+    command: npm start

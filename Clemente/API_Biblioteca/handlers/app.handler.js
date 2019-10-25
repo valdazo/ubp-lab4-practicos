@@ -3,7 +3,7 @@ const http = require('http');
 
 get = async (resp, path) => {
   let promise = new Promise((res, rej) => {
-    http.get(`http://localhost:7070${path}`, (response) => {
+    http.get(`http://api_db:7070${path}`, (response) => {
       let data = '';
       response.on('data', (chunk) => {
         data += chunk;
@@ -27,6 +27,7 @@ post = (res, body, path, method) => {
   }
   const dataToWrite = JSON.stringify(body);
   const options = {
+    host: 'api_db',
     port: 7070,
     path: path,
     method: method,
