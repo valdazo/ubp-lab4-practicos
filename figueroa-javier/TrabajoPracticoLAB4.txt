@@ -1,0 +1,67 @@
+﻿/*FIGUEROA JAVIER*/
+
+RQ1.1: Agregar libro a la librería. 
+
+Request
+POST url/libros
+Body:
+{ 
+nombre: <nombre>,
+cantidad: <cantidad>
+}
+Response
+    201 Created.
+    Body: {“id”:<id>}
+
+
+RQ1.2: Eliminar libro de la librería.
+Request
+	DELETE url/libros/:idlibro
+	Body:
+	{
+		libro:<libro>
+	}
+Response
+   200 Ok
+   Body:{”libro”:<libro>}
+   204 No Content
+
+
+RQ1.3: Modificar la cantidad de ejemplares de un libro en la librería.
+
+Request
+	PUT url/libros/:idlibro
+	Body:
+	{
+		idlibro:<idlibro>
+		cantidad:<cantidad>
+	}
+Response
+   200 Ok
+   Body:{”libro”:<libro>}{"cantidad":<cantidad>}
+   204 No Content
+
+RQ1.4: Obtener la cantidad de ejemplares disponibles para préstamo en la librería.
+	Request
+	POST url/prestamos/
+	Body:
+	{
+		idlibro:<idlibro>
+		cantidad:<cantidad>
+		titulolibro:<titulo_libro>
+		nombresocio:<nombre_socio>
+		dias:<dias>
+	}
+Response
+   200 Ok
+   Body:{”libro”:<libro>}{"cantidad":<cantidad>}
+   204 No Content
+
+RQ2.1: Crear socio.
+
+RQ2.2: Obtener los libros prestados al socio con sus fechas de vencimiento.
+
+RQ3.1: Registrar un préstamo de un libro a un socio.
+
+RQ3.2: Un socio puede devolver un libro prestado.
+
